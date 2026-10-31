@@ -1,6 +1,7 @@
 import unittest
 import json
 from pathlib import Path
+from unittest.mock import patch
 from datetime import datetime, date, timezone, timedelta
 from watchdog import normalise_url, relevant, rss_url, fresh, add_candidate, upcoming_event, already_seen_event, remember_event, dismissed_event, feedback_allowed, feedback_url
 
@@ -81,7 +82,8 @@ class WatchdogTests(unittest.TestCase):
         dummy = {"title": "[TEST ONLY] Not Interested button verification",
                  "description": "[TEST ONLY] Not Interested button verification. Not a real event.",
                  "link": "https://github.com/playingmeow/Events_Watchdog"}
-        self.assertTrue(dismissed_event(dummy, watch, feedback))
+        with patch("watchdog.story_key", return_value="test:ntfy-feedback-roundtrip"):
+            self.assertTrue(dismissed_event(dummy, watch, feedback))
         unrelated = dict(dummy, link="https://github.com/playingmeow/Events_Watchdog/issues/1")
         self.assertFalse(dismissed_event(unrelated, watch, feedback))
 
