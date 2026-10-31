@@ -37,11 +37,6 @@ export default {
       return response('<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><title>Events Watchdog</title><h2>Not Interested?</h2><p>This will hide future alerts about this specific event.</p><form method="POST"><button type="submit">Confirm Not Interested</button></form>');
     }
     if (request.method !== "POST") return response("Method not allowed", 405, "text/plain");
-    const origin = request.headers.get("origin");
-    if (origin && origin !== url.origin) return response("Invalid origin", 403, "text/plain");
-    const fetchSite = request.headers.get("sec-fetch-site");
-    if (fetchSite && !["same-origin", "none"].includes(fetchSite))
-      return response("Cross-site submission blocked", 403, "text/plain");
     try {
       const stateUrl = "https://api.github.com/repos/" + REPO + "/contents/state.json";
       const stateRes = await fetch(stateUrl, { headers: { authorization: "Bearer " + env.GITHUB_TOKEN, accept: "application/vnd.github+json", "user-agent": "Events-Watchdog-Feedback" } });
