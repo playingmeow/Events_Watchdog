@@ -1,6 +1,6 @@
 import unittest
 from datetime import datetime, date, timezone, timedelta
-from watchdog import normalise_url, relevant, rss_url, fresh, add_candidate, upcoming_event, already_seen_event, remember_event
+from watchdog import normalise_url, relevant, rss_url, fresh, add_candidate, upcoming_event, already_seen_event, remember_event, dismissed_event
 
 class WatchdogTests(unittest.TestCase):
     def test_tracking_removed(self):
@@ -55,6 +55,15 @@ class WatchdogTests(unittest.TestCase):
         self.assertFalse(already_seen_event(other,history))
         remember_event(repost,history,date(2026,11,1))
         self.assertEqual(len(history),1)
+
+    def test_not_interested_is_event_specific(self):
+        watch = {"id":"our-tampines-hub"}
+        text = "Attention Tampines residents and hub visitors! The OTH Hawker Centre will be closed for spring cleaning on 3 and 4 November from 7am to 11pm. This is to ensure a clean and pleasant environment."
+        feedback = {"our-tampines-hub":[{"text":text}]}
+        repost = {"title":"Notice","description":text.replace("11pm.","11pm ."),"link":"https://t.me/OTHlifestyle/528","published":""}
+        unrelated = {"title":"Netball","description":"The OTH Netball Fiesta will be held on 8 November. Register for an exciting day of games and friendly competition!","link":"https://t.me/OTHsports/618","published":""}
+        self.assertTrue(dismissed_event(repost,watch,feedback))
+        self.assertFalse(dismissed_event(unrelated,watch,feedback))
 
     def test_rss_url(self):
         self.assertIn("news.google.com",rss_url({"type":"google_news_rss","query":"test"}))
