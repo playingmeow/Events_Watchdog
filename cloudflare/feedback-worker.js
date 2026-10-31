@@ -55,7 +55,7 @@ async function maintenanceDone(request, env, url) {
       if (task.last_done === today) return response("<h2>Already marked Done today!</h2>");
       task.last_done = today;
       const payload = { message: "chore: complete maintenance " + taskId,
-        content: encodeBase64(encoder.encode(JSON.stringify(data, null, 2) + "\\n")), sha };
+        content: encodeBase64(encoder.encode(JSON.stringify(data, null, 2) + "\n")), sha };
       const result = await fetch(api, { method: "PUT",
         headers: { ...headers, "content-type": "application/json" }, body: JSON.stringify(payload) });
       if (result.ok) return response("<h2>Saved!</h2><p>Countdown restarted from today.</p>");
