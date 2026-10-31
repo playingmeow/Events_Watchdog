@@ -1,1 +1,9 @@
-{}
+{
+  "heartbeat-bedok": [
+    {
+      "key": "test:ntfy-feedback-roundtrip",
+      "text": "[TEST ONLY] Not Interested button verification. Not a real event.",
+      "date": "2026-10-31"
+    }
+  ]
+}
