@@ -1,0 +1,57 @@
+name: Test Not Interested Button
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: events-watchdog
+  cancel-in-progress: false
+
+jobs:
+  feedback-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - name: Stage dummy event in GitHub
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from datetime import datetime, timezone
+          path = Path("state.json")
+          state = json.loads(path.read_text())
+          catalog = state.setdefault("event_catalog", {}).setdefault("heartbeat-bedok", {})
+          catalog["eeeeeeeeeeeeeeeeeeeeeeee"] = {
+              "story_key": "test:ntfy-feedback-roundtrip",
+              "text": "[TEST ONLY] Not Interested button verification. Not a real event.",
+              "date": datetime.now(timezone.utc).date().isoformat(),
+          }
+          path.write_text(json.dumps(state, indent=2, sort_keys=True) + "\n")
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add state.json
+          git diff --cached --quiet || (git commit -m 'test: stage synthetic ntfy feedback event [skip ci]' && git push)
+      - name: Send exactly one dummy ntfy notification
+        env:
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          NTFY_TOKEN: ${{ secrets.NTFY_TOKEN }}
+          NTFY_SERVER: ${{ vars.NTFY_SERVER }}
+          FEEDBACK_BASE_URL: ${{ vars.FEEDBACK_BASE_URL }}
+        run: |
+          python - <<'PY'
+          import os
+          from watchdog import send_ntfy, feedback_url
+          if not os.getenv("NTFY_TOPIC") or not os.getenv("FEEDBACK_BASE_URL"):
+              raise SystemExit("NTFY_TOPIC secret and FEEDBACK_BASE_URL variable required")
+          watch = {"id": "heartbeat-bedok", "name": "Feedback TEST"}
+          item = {"title": "[TEST ONLY] Not Interested button", "link": "https://github.com/playingmeow/Events_Watchdog", "description": "This is a dummy test notification."}
+          url = feedback_url(watch, "eeeeeeeeeeeeeeeeeeeeeeee")
+          if not url:
+              raise SystemExit("Invalid FEEDBACK_BASE_URL")
+          send_ntfy(os.environ["NTFY_TOPIC"], watch, item, url)
+          print("One dummy ntfy notification sent; no real events notified.")
+          PY
