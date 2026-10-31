@@ -197,9 +197,26 @@ def add_candidate(candidates, item, watch):
     candidates[key] = item
     return True
 
-def send_ntfy(topic,watch,item):
+def feedback_allowed(watch, item):
+    """Operational notices stay visible; dismiss buttons are for events only."""
+    if watch["type"] != "event":
+        return False
+    text = (item["title"] + " " + item["description"]).lower()
+    operational = ("spring cleaning", "closure", "closed for", "maintenance",
+                   "reopening", "re-open", "temporarily closed", "service disruption")
+    return not any(term in text for term in operational)
+
+def feedback_url(watch, key):
+    base = os.getenv("FEEDBACK_BASE_URL", "").rstrip("/")
+    if not base or not base.startswith("https://"):
+        return None
+    return base + "/dismiss?" + urlencode({"watch": watch["id"], "key": key})
+
+def send_ntfy(topic,watch,item,feedback_link=None):
     server = (os.getenv("NTFY_SERVER") or "https://ntfy.sh").rstrip("/")
     headers = {"Title":"Watchdog: "+watch["name"],"Click":item["link"],"Tags":"mag","Content-Type":"text/plain; charset=utf-8"}
+    if feedback_link:
+        headers["Actions"] = "view, Not Interested, " + feedback_link
     token = os.getenv("NTFY_TOKEN")
     if token:
         headers["Authorization"] = "Bearer "+token
@@ -215,6 +232,7 @@ def run(dry_run=False):
     state.setdefault("seen",{})
     state.setdefault("initialised",[])
     state.setdefault("oth_history",[])
+    state.setdefault("event_catalog",{})
     feedback_path = ROOT/"feedback.json"
     feedback = json.loads(feedback_path.read_text()) if feedback_path.exists() else {}
     now = datetime.now(SGT).date()
@@ -261,7 +279,13 @@ def run(dry_run=False):
             if dry_run:
                 print("[DRY RUN]",watch["name"],item["title"],item["link"])
             elif not baseline:
-                send_ntfy(os.environ["NTFY_TOPIC"],watch,item)
+                link = feedback_url(watch, key) if feedback_allowed(watch, item) else None
+                send_ntfy(os.environ["NTFY_TOPIC"],watch,item,link)
+                if link:
+                    state["event_catalog"].setdefault(watch["id"],{})[key] = {
+                        "story_key": story_key(item, watch), "text": item["description"],
+                        "date": now.isoformat()
+                    }
                 total += 1
             if not dry_run:
                 seen[key] = now.isoformat()
@@ -275,6 +299,11 @@ def run(dry_run=False):
     if not dry_run:
         cutoff = (now-timedelta(days=365)).isoformat()
         state["oth_history"] = [entry for entry in state["oth_history"] if entry["date"] >= cutoff]
+        for watch_id, entries in state["event_catalog"].items():
+            state["event_catalog"][watch_id] = {
+                key: value for key, value in entries.items()
+                if value.get("date", "") >= cutoff
+            }
         state_path.write_text(json.dumps(state,indent=2,sort_keys=True)+"\n")
     print("Notifications sent:",total)
 
