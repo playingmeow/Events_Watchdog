@@ -1,6 +1,6 @@
 import unittest
-from datetime import datetime, timezone, timedelta
-from watchdog import normalise_url, relevant, rss_url, fresh, add_candidate
+from datetime import datetime, date, timezone, timedelta
+from watchdog import normalise_url, relevant, rss_url, fresh, add_candidate, upcoming_event
 
 class WatchdogTests(unittest.TestCase):
     def test_tracking_removed(self):
@@ -35,6 +35,15 @@ class WatchdogTests(unittest.TestCase):
         self.assertFalse(add_candidate(candidates,b,watch))
         self.assertTrue(add_candidate(candidates,different,watch))
         self.assertEqual(len(candidates),2)
+
+    def test_event_expiry_and_multi_day_ranges(self):
+        item = lambda s: {"description":s}
+        self.assertTrue(upcoming_event(item("Deepavali 30 October to 8 November 2026"),date(2026,11,5)))
+        self.assertFalse(upcoming_event(item("Deepavali 30 October to 8 November 2026"),date(2026,11,9)))
+        self.assertTrue(upcoming_event(item("Hawker Centre closed 3 and 4 November"),date(2026,11,4)))
+        self.assertFalse(upcoming_event(item("Hawker Centre closed 3 and 4 November"),date(2026,11,5)))
+        self.assertTrue(upcoming_event(item("Workshop 5 January"),date(2026,12,15)))
+        self.assertFalse(upcoming_event(item("Workshop 5 January"),date(2027,1,6)))
 
     def test_rss_url(self):
         self.assertIn("news.google.com",rss_url({"type":"google_news_rss","query":"test"}))
