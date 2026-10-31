@@ -89,8 +89,20 @@
       "enabled": true,
       "sources": [
         {
-          "type": "google_news_rss",
-          "query": "\"Our Tampines Hub\" (event OR workshop OR exhibition OR performance)"
+          "type": "telegram_public",
+          "url": "https://t.me/s/OTHcommunity"
+        },
+        {
+          "type": "telegram_public",
+          "url": "https://t.me/s/OTHarts"
+        },
+        {
+          "type": "telegram_public",
+          "url": "https://t.me/s/OTHsports"
+        },
+        {
+          "type": "telegram_public",
+          "url": "https://t.me/s/OTHlifestyle"
         }
       ],
       "max_age_days": 14
