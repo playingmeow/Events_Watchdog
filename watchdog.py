@@ -66,6 +66,17 @@ def relevant(item,watch):
     words = watch.get("deal_words",["promotion","promo","sale","offer","discount","anniversary","deal","fare"])
     return any(w.lower() in content for w in words)
 
+def story_key(item, watch):
+    """Group coverage of the same named campaign, while retaining distinct bank offers."""
+    title = item["title"].lower()
+    if watch["id"] == "sq-time-to-fly":
+        if any(x in title for x in ("citi prestige","hsbc","dbs","uob","amex","ocbc")):
+            bank = next(x for x in ("citi prestige","hsbc","dbs","uob","amex","ocbc") if x in title)
+            return "bank:"+bank
+        if "time to fly" in title or "380,000" in title:
+            return "campaign:time-to-fly"
+    return "url:"+normalise_url(item["link"])
+
 def send_ntfy(topic,watch,item):
     server = (os.getenv("NTFY_SERVER") or "https://ntfy.sh").rstrip("/")
     headers = {"Title":"Watchdog: "+watch["name"],"Click":item["link"],"Tags":"mag","Content-Type":"text/plain; charset=utf-8"}
@@ -103,7 +114,7 @@ def run(dry_run=False):
                 for item in feed_items:
                     if relevant(item,watch) and fresh(item, max_age_days=watch.get("max_age_days",14)):
                         matched += 1
-                        key = hashlib.sha256(normalise_url(item["link"]).encode()).hexdigest()[:24]
+                        key = hashlib.sha256(story_key(item,watch).encode()).hexdigest()[:24]
                         candidates.setdefault(key,item)
                 print(f"[SOURCE] {watch['id']} {source['type']}: fetched={len(feed_items)} matched={matched}")
                 if matched == 0:
