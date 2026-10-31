@@ -1,6 +1,6 @@
 import unittest
 from datetime import datetime, date, timezone, timedelta
-from watchdog import normalise_url, relevant, rss_url, fresh, add_candidate, upcoming_event, already_seen_event, remember_event, dismissed_event
+from watchdog import normalise_url, relevant, rss_url, fresh, add_candidate, upcoming_event, already_seen_event, remember_event, dismissed_event, feedback_allowed, feedback_url
 
 class WatchdogTests(unittest.TestCase):
     def test_tracking_removed(self):
@@ -64,6 +64,14 @@ class WatchdogTests(unittest.TestCase):
         unrelated = {"title":"Netball","description":"The OTH Netball Fiesta will be held on 8 November. Register for an exciting day of games and friendly competition!","link":"https://t.me/OTHsports/618","published":""}
         self.assertTrue(dismissed_event(repost,watch,feedback))
         self.assertFalse(dismissed_event(unrelated,watch,feedback))
+
+    def test_feedback_only_for_events_not_operational_notices(self):
+        watch = {"id": "our-tampines-hub", "type": "event"}
+        event = {"title": "Netball Fiesta", "description": "Join the games on 8 November"}
+        notice = {"title": "Hawker centre spring cleaning", "description": "Closed for maintenance on 3 November"}
+        self.assertTrue(feedback_allowed(watch, event))
+        self.assertFalse(feedback_allowed(watch, notice))
+        self.assertFalse(feedback_allowed({"id":"sq-time-to-fly", "type":"promotion"}, event))
 
     def test_rss_url(self):
         self.assertIn("news.google.com",rss_url({"type":"google_news_rss","query":"test"}))
