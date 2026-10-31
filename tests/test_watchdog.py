@@ -1,7 +1,4 @@
 import unittest
-import json
-from pathlib import Path
-from unittest.mock import patch
 from datetime import datetime, date, timezone, timedelta
 from watchdog import normalise_url, relevant, rss_url, fresh, add_candidate, upcoming_event, already_seen_event, remember_event, dismissed_event, feedback_allowed, feedback_url
 
@@ -76,16 +73,13 @@ class WatchdogTests(unittest.TestCase):
         self.assertFalse(feedback_allowed(watch, notice))
         self.assertFalse(feedback_allowed({"id":"sq-time-to-fly", "type":"promotion"}, event))
 
-    def test_saved_feedback_roundtrip_suppresses_exact_event(self):
-        feedback = json.loads((Path(__file__).resolve().parents[1] / "feedback.json").read_text())
+    def test_feedback_suppression_is_event_specific(self):
         watch = {"id": "heartbeat-bedok"}
-        dummy = {"title": "[TEST ONLY] Not Interested button verification",
-                 "description": "[TEST ONLY] Not Interested button verification. Not a real event.",
-                 "link": "https://github.com/playingmeow/Events_Watchdog"}
-        with patch("watchdog.story_key", return_value="test:ntfy-feedback-roundtrip"):
-            self.assertTrue(dismissed_event(dummy, watch, feedback))
-        unrelated = dict(dummy, link="https://github.com/playingmeow/Events_Watchdog/issues/1")
-        self.assertFalse(dismissed_event(unrelated, watch, feedback))
+        feedback = {"heartbeat-bedok": [{"key": "url:https://example.com/event-1", "text": "Event 1"}]}
+        event = {"title": "Event 1", "description": "Event 1", "link": "https://example.com/event-1"}
+        other = dict(event, link="https://example.com/event-2")
+        self.assertTrue(dismissed_event(event, watch, feedback))
+        self.assertFalse(dismissed_event(other, watch, feedback))
 
     def test_rss_url(self):
         self.assertIn("news.google.com",rss_url({"type":"google_news_rss","query":"test"}))
