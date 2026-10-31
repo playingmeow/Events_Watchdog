@@ -92,6 +92,9 @@ def run(dry_run=False):
                         key = hashlib.sha256(normalise_url(item["link"]).encode()).hexdigest()[:24]
                         candidates.setdefault(key,item)
                 print(f"[SOURCE] {watch['id']} {source['type']}: fetched={len(feed_items)} matched={matched}")
+                if matched == 0:
+                    for sample in feed_items[:3]:
+                        print("[SAMPLE]",watch["id"],sample["title"][:160])
                 success += 1
             except Exception as exc:
                 print("WARNING:",watch["name"],source["type"],str(exc),file=sys.stderr)
