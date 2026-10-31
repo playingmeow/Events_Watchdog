@@ -1,0 +1,25 @@
+{
+  "device": "ILIFE A30 Pro",
+  "started": "2026-09-10",
+  "tasks": [
+    {
+      "id": "sensors",
+      "name": "Clean sensors and charging contacts",
+      "interval_days": 30,
+      "last_done": null,
+      "initial_due": "2026-10-31"
+    },
+    {
+      "id": "dust-bag",
+      "name": "Inspect self-empty station dust bag",
+      "interval_days": 30,
+      "last_done": "2026-10-31"
+    },
+    {
+      "id": "hepa",
+      "name": "Inspect HEPA filter condition",
+      "interval_days": 60,
+      "last_done": "2026-10-24"
+    }
+  ]
+}
