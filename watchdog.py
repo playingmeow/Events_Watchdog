@@ -179,6 +179,8 @@ def run(dry_run=False):
                 matched = 0
                 for item in feed_items:
                     timely = upcoming_event(item) if source["type"] == "telegram_public" else fresh(item, max_age_days=watch.get("max_age_days",14))
+                    if watch["id"] == "our-tampines-hub":
+                        timely = timely and upcoming_event(item)
                     if timely and (source["type"] == "telegram_public" or relevant(item,watch)):
                         matched += 1
                         key = hashlib.sha256(story_key(item,watch).encode()).hexdigest()[:24]
