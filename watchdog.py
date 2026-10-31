@@ -212,11 +212,11 @@ def feedback_url(watch, key):
         return None
     return base + "/dismiss?" + urlencode({"watch": watch["id"], "key": key})
 
-def send_ntfy(topic,watch,item,feedback_link=None):
+def send_ntfy(topic,watch,item,feedback_link=None,action_label="Not Interested"):
     server = (os.getenv("NTFY_SERVER") or "https://ntfy.sh").rstrip("/")
     headers = {"Title":"Watchdog: "+watch["name"],"Click":item["link"],"Tags":"mag","Content-Type":"text/plain; charset=utf-8"}
     if feedback_link:
-        headers["Actions"] = "view, Not Interested, " + feedback_link
+        headers["Actions"] = "view, " + action_label + ", " + feedback_link
     token = os.getenv("NTFY_TOKEN")
     if token:
         headers["Authorization"] = "Bearer "+token
