@@ -1,6 +1,6 @@
 import unittest
 from datetime import datetime, date, timezone, timedelta
-from watchdog import normalise_url, relevant, rss_url, fresh, add_candidate, upcoming_event
+from watchdog import normalise_url, relevant, rss_url, fresh, add_candidate, upcoming_event, already_seen_event, remember_event
 
 class WatchdogTests(unittest.TestCase):
     def test_tracking_removed(self):
@@ -44,6 +44,17 @@ class WatchdogTests(unittest.TestCase):
         self.assertFalse(upcoming_event(item("Hawker Centre closed 3 and 4 November"),date(2026,11,5)))
         self.assertTrue(upcoming_event(item("Workshop 5 January"),date(2026,12,15)))
         self.assertFalse(upcoming_event(item("Workshop 5 January"),date(2027,1,6)))
+
+    def test_oth_repost_across_runs(self):
+        history = []
+        original = {"description":"Attention Tampines residents and hub visitors! The OTH Hawker Centre will be closed for spring cleaning on 3 and 4 November from 7am to 11pm. This is to ensure a clean and pleasant environment."}
+        repost = {"description":original["description"].replace("11pm.","11pm .")}
+        other = {"description":"The OTH Netball Fiesta is happening on 8 November from 9am to 6pm. Join an exciting day of sports, games and friendly competition with your friends and family!"}
+        remember_event(original,history,date(2026,10,31))
+        self.assertTrue(already_seen_event(repost,history))
+        self.assertFalse(already_seen_event(other,history))
+        remember_event(repost,history,date(2026,11,1))
+        self.assertEqual(len(history),1)
 
     def test_rss_url(self):
         self.assertIn("news.google.com",rss_url({"type":"google_news_rss","query":"test"}))
