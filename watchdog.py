@@ -104,20 +104,36 @@ def telegram_feed(source):
     return parser.posts
 
 def upcoming_event(item, today=None):
-    """Require an explicit upcoming date; never alert on undated posts."""
+    """Accept dated events/notices until their last day, within a 60-day horizon."""
     current = today or datetime.now(SGT).date()
-    text = item["description"]
-    months = "January February March April May June July August September October November December"
-    month_names = {name.lower():i for i,name in enumerate(months.split(),1)}
-    for m in re.finditer(r"\b(\d{1,2})\s*(?:[-–]\s*\d{1,2}\s*)?(January|February|March|April|May|June|July|August|September|October|November|December)\s*(20\d{2})?\b",text,re.I):
-        day,month,year = int(m.group(1)),month_names[m.group(2).lower()],int(m.group(3) or current.year)
+    body = item["description"]
+    month_pattern = r"(January|February|March|April|May|June|July|August|September|October|November|December)"
+    months = {name.lower(): i for i, name in enumerate("January February March April May June July August September October November December".split(), 1)}
+
+    def date_for(day, month, year=None):
+        # Yearless dates in January/February may refer to next year.
+        month_num = months[month.lower()]
+        yr = int(year) if year else current.year
+        if not year and month_num < current.month and current.month >= 10:
+            yr += 1
         try:
-            event_date = datetime(year,month,day).date()
-            if current <= event_date <= current+timedelta(days=60):
-                return True
+            return datetime(yr, month_num, int(day)).date()
         except ValueError:
-            pass
-    return False
+            return None
+
+    dates = []
+    # Ranges: "30 October to 8 November", "3–4 November", "3 and 4 November".
+    cross_month = rf"\b(\d{{1,2}})\s+{month_pattern}\s*(?:to|[-–])\s*(\d{{1,2}})\s+{month_pattern}\s*(20\d{{2}})?\b"
+    for m in re.finditer(cross_month, body, re.I):
+        dates.append(date_for(m.group(3), m.group(4), m.group(5)))
+    same_month = rf"\b\d{{1,2}}\s*(?:to|[-–]|and)\s*(\d{{1,2}})\s+{month_pattern}\s*(20\d{{2}})?\b"
+    for m in re.finditer(same_month, body, re.I):
+        dates.append(date_for(m.group(1), m.group(2), m.group(3)))
+    singles = rf"\b(\d{{1,2}})\s+{month_pattern}\s*(20\d{{2}})?\b"
+    for m in re.finditer(singles, body, re.I):
+        dates.append(date_for(m.group(1), m.group(2), m.group(3)))
+    # For a multi-day range, a past start must not override its future end.
+    return any(d is not None and current <= d <= current + timedelta(days=60) for d in dates)
 
 def relevant(item,watch):
     content = (item["title"]+" "+item["description"]).lower()
