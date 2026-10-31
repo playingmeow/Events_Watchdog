@@ -7,6 +7,7 @@ import os
 import re
 import sys
 from datetime import datetime, timedelta, timezone
+from email.utils import parsedate_to_datetime
 from pathlib import Path
 from urllib.parse import quote, urlsplit, urlunsplit, parse_qsl, urlencode
 from urllib.request import Request, urlopen
@@ -38,9 +39,22 @@ def get_feed(source):
         title = html.unescape(node.findtext("title","").strip())
         link = html.unescape(node.findtext("link","").strip())
         desc = re.sub(r"<[^>]*>"," ",html.unescape(node.findtext("description","")))[:600]
+        published = node.findtext("pubDate","").strip()
         if title and link.startswith(("https://","http://")):
-            items.append({"title":title,"link":link,"description":desc})
+            items.append({"title":title,"link":link,"description":desc,"published":published})
     return items
+
+def fresh(item, now=None, max_age_days=14):
+    """Reject undated, stale and implausibly future-dated RSS entries."""
+    try:
+        published = parsedate_to_datetime(item["published"])
+        if published.tzinfo is None:
+            return False
+        current = now or datetime.now(timezone.utc)
+        age = current.astimezone(timezone.utc) - published.astimezone(timezone.utc)
+        return timedelta(0) <= age <= timedelta(days=max_age_days)
+    except (KeyError, TypeError, ValueError, OverflowError):
+        return False
 
 def relevant(item,watch):
     content = (item["title"]+" "+item["description"]).lower()
@@ -87,7 +101,7 @@ def run(dry_run=False):
                 fetched += len(feed_items)
                 matched = 0
                 for item in feed_items:
-                    if relevant(item,watch):
+                    if relevant(item,watch) and fresh(item, max_age_days=watch.get("max_age_days",14)):
                         matched += 1
                         key = hashlib.sha256(normalise_url(item["link"]).encode()).hexdigest()[:24]
                         candidates.setdefault(key,item)
