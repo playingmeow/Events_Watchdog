@@ -73,8 +73,8 @@
       "enabled": true,
       "sources": [
         {
-          "type": "google_news_rss",
-          "query": "\"Heartbeat@Bedok\" (event OR workshop OR activity OR programme)"
+          "type": "telegram_public",
+          "url": "https://t.me/s/Heartbeatbedok"
         }
       ]
     }
