@@ -77,6 +77,23 @@
           "url": "https://t.me/s/Heartbeatbedok"
         }
       ]
+    },
+    {
+      "id": "our-tampines-hub",
+      "type": "event",
+      "name": "Our Tampines Hub (OTH)",
+      "keywords": [
+        "our tampines hub",
+        "tampines hub"
+      ],
+      "enabled": true,
+      "sources": [
+        {
+          "type": "google_news_rss",
+          "query": "\"Our Tampines Hub\" (event OR workshop OR exhibition OR performance)"
+        }
+      ],
+      "max_age_days": 14
     }
   ]
 }
