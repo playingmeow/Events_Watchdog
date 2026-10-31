@@ -53,7 +53,7 @@ def relevant(item,watch):
     return any(w.lower() in content for w in words)
 
 def send_ntfy(topic,watch,item):
-    server = os.getenv("NTFY_SERVER","https://ntfy.sh").rstrip("/")
+    server = (os.getenv("NTFY_SERVER") or "https://ntfy.sh").rstrip("/")
     headers = {"Title":"Watchdog: "+watch["name"],"Click":item["link"],"Tags":"mag","Content-Type":"text/plain; charset=utf-8"}
     token = os.getenv("NTFY_TOKEN")
     if token:
