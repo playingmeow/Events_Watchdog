@@ -8,6 +8,7 @@ import re
 import sys
 from datetime import datetime, timedelta, timezone
 from email.utils import parsedate_to_datetime
+from difflib import SequenceMatcher
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import quote, urlsplit, urlunsplit, parse_qsl, urlencode
@@ -143,6 +144,23 @@ def story_key(item, watch):
             return "campaign:time-to-fly:"+period
     return "url:"+normalise_url(item["link"])
 
+def same_oth_notice(a, b):
+    """Conservatively merge near-identical OTH announcements across channels."""
+    def cleaned(item):
+        return " ".join(re.findall(r"[a-z0-9]+", item["description"].lower()))
+    left, right = cleaned(a), cleaned(b)
+    return min(len(left),len(right)) >= 70 and SequenceMatcher(None,left,right).ratio() >= 0.92
+
+def add_candidate(candidates, item, watch):
+    if watch["id"] == "our-tampines-hub":
+        if any(same_oth_notice(item, existing) for existing in candidates.values()):
+            return False
+    key = hashlib.sha256(story_key(item,watch).encode()).hexdigest()[:24]
+    if key in candidates:
+        return False
+    candidates[key] = item
+    return True
+
 def send_ntfy(topic,watch,item):
     server = (os.getenv("NTFY_SERVER") or "https://ntfy.sh").rstrip("/")
     headers = {"Title":"Watchdog: "+watch["name"],"Click":item["link"],"Tags":"mag","Content-Type":"text/plain; charset=utf-8"}
@@ -183,8 +201,7 @@ def run(dry_run=False):
                         timely = timely and upcoming_event(item)
                     if timely and (source["type"] == "telegram_public" or relevant(item,watch)):
                         matched += 1
-                        key = hashlib.sha256(story_key(item,watch).encode()).hexdigest()[:24]
-                        candidates.setdefault(key,item)
+                        add_candidate(candidates,item,watch)
                 print(f"[SOURCE] {watch['id']} {source['type']}: fetched={len(feed_items)} matched={matched}")
                 if matched == 0:
                     for sample in feed_items[:3]:
