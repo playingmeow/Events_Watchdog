@@ -1,9 +1,1 @@
-{
-  "heartbeat-bedok": [
-    {
-      "key": "test:feedback-roundtrip-20261031",
-      "text": "[TEST ONLY] Events Watchdog Not Interested feedback roundtrip. This is not a real event.",
-      "date": "2026-10-31"
-    }
-  ]
-}
+{}
