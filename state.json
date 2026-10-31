@@ -1,4 +1,61 @@
 {
-  "initialised": [],
-  "seen": {}
+  "event_catalog": {},
+  "initialised": [
+    "yakiniku-go",
+    "sq-time-to-fly",
+    "heartbeat-bedok",
+    "our-tampines-hub"
+  ],
+  "oth_history": [
+    {
+      "date": "2026-10-31",
+      "text": "Attention Tampines residents and hub visitors! The OTH Hawker Centre will be closed for spring cleaning on 3 and 4 November from 7am to 11pm. This is to ensure a clean and pleasant environment for everyone. Thank you for your understanding. We regret any inconvenience caused."
+    },
+    {
+      "date": "2026-10-31",
+      "text": "Step into Animal Land this Deepavali as a family is whisked into a world of colourful creatures, laughter and discovery. Guided by a Crow, Ant and Lion, they uncover the true meaning of Deepavali \u2014 family, friendship and togetherness. Presented in English, this joyful celebration comes to life at Festive Arts Theatre. \ud83d\udcc5 Saturday, 14 November 2026 \u23f0 3PM and 5PM \ud83d\udccd OTH Festive Arts Theatre, L2 Ticket redemption must be done in person, on-site via QR code registration at the L1 Customer Service Counter between 10am and 9pm from 25 October 2026 onwards, subject to first\u2011come, first\u2011served basis. Each person is entitled to a pair of tickets upon successful registration. Always Something for Everyone!"
+    },
+    {
+      "date": "2026-10-31",
+      "text": "Ballet For All invites audiences to a special one\u2011night\u2011only celebration of dance, featuring three captivating works that blend contemporary expression, vibrant energy and timeless classical charm. Experience an evening of artistry and grace at Festive Arts Theatre. We kindly remind all patrons to redeem tickets only if you are able to attend. Redeeming but not showing up prevents other genuinely interested audience members from having the chance to enjoy the performance. Please help us ensure fair access for everyone. Ticket redemption must be done in person, on\u2011site via QR code registration at the L1 Customer Service Counter between 10am and 9pm from 1 November 2026 onwards, subject to first\u2011come, first\u2011served basis. Each person is entitled to a pair of tickets upon successful registration."
+    },
+    {
+      "date": "2026-10-31",
+      "text": "Get ready to put your paddle skills to the ultimate test in a high-energy crossover tournament! Date: Sunday, 1 November 2026 Time: 9:00 AM \u2013 6:00 PM Venue: Community Auditorium @ Our Tampines Hub. Registration is free! Categories: Mixed Doubles (Open & Masters categories). The Twist: Standard pickleball rules, official pickleball ball, and a full-sized pickleball court\u2014played entirely with a tiny table tennis bat. Ready to step up? Bring your sharpest reflexes, grab your partner, and sign up for free at the link below to see if you have what it takes to dominate the court! \ud83d\udd25 Register Now at: https://www.pathway-expert.com/PEOS/index.php?t=TTPKBH2026 Organized by Tampines West CSN and Our Tampines Hub. Always Something for Everyone!"
+    },
+    {
+      "date": "2026-10-31",
+      "text": "Good news! Fitness@Gate 1 is returning to Gate 1 starting from 2 November 2026. With haze conditions improving over the past week, we're moving back from our temporary venue at Dance Studio 6. See you there!"
+    },
+    {
+      "date": "2026-10-31",
+      "text": "Ready to hit the court? \ud83c\udfd0 Gather your squad and show off your skills at the OTH Netball Fiesta 2026! Whether you're playing with schoolmates or forming a mixed team with friends, there's a category for everyone! * Date: 22 November 2026 * Time: 9:00 AM \u2013 6:00 PM * Location: L3, Community Auditorium @ Our Tampines Hub * Categories: U12, U17, U23, Women\u2019s Open & Mixed Open * Registration is 100% FREE! \u26a0\ufe0f Slots are limited and allocated on a first-come, first-served basis, so don't wait until it's too late! \ud83d\udc49 Sign up your team now: https://www.pathway-expert.com/PEOS/index.php?t=OTHNBF2026 or scan the QR code in the poster Organised by Our Tampines Hub & Tampines West CSN in partnership with Mens & Mixed Netball Singapore(SGMMNA)."
+    },
+    {
+      "date": "2026-10-31",
+      "text": "Celebrate Deepavali at OTH! \ud83e\ude94 Join us as we kick start the celebration of Deepavali with a series of fun and educational activities! \ud83d\uddd3\ufe0f 30 October to 8 November 2026 \u23f1\ufe0f 12pm to 8pm \ud83d\udccd Festive South and Festive Walk West, Level 1 See you there! \ud83d\udc4b"
+    }
+  ],
+  "seen": {
+    "heartbeat-bedok": {
+      "1b45aac21fa551595144ed80": "2026-10-31",
+      "eba70a9b1cb12e78a65e1b9e": "2026-10-31"
+    },
+    "our-tampines-hub": {
+      "1898c4616aa7497accb237c3": "2026-10-31",
+      "4083546aa98105d5eebedfef": "2026-10-31",
+      "5221c9b9e26fe71a49599554": "2026-10-31",
+      "890bc79daa43e0f95a551e64": "2026-10-31",
+      "90a020a5c6aca8eac6ebe20c": "2026-10-31",
+      "de8c1d3685651f6746ce23e3": "2026-10-31",
+      "e543b7c6cc4a3265e4459550": "2026-10-31"
+    },
+    "sq-time-to-fly": {
+      "0166a82af19438792224044a": "2026-10-31",
+      "22112ea4b7dc08266e3c2cd3": "2026-10-31",
+      "b9c98f8c1246f599b805426c": "2026-10-31",
+      "effd8185f1c56a474ea90c2a": "2026-10-31"
+    },
+    "yakiniku-go": {}
+  }
 }
