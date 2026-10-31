@@ -69,12 +69,16 @@ def relevant(item,watch):
 def story_key(item, watch):
     """Group coverage of the same named campaign, while retaining distinct bank offers."""
     title = item["title"].lower()
+    try:
+        period = parsedate_to_datetime(item["published"]).strftime("%Y-%m")
+    except (KeyError, TypeError, ValueError):
+        period = "unknown"
     if watch["id"] == "sq-time-to-fly":
         if any(x in title for x in ("citi prestige","hsbc","dbs","uob","amex","ocbc")):
             bank = next(x for x in ("citi prestige","hsbc","dbs","uob","amex","ocbc") if x in title)
-            return "bank:"+bank
+            return "bank:"+bank+":"+period
         if "time to fly" in title or "380,000" in title:
-            return "campaign:time-to-fly"
+            return "campaign:time-to-fly:"+period
     return "url:"+normalise_url(item["link"])
 
 def send_ntfy(topic,watch,item):
