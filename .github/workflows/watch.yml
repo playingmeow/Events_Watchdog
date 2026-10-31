@@ -1,7 +1,5 @@
 name: Events Watchdog
 on:
-  schedule:
-    - cron: '0 13 * * 6' # Saturday 21:00 SGT; GitHub may delay
   workflow_dispatch:
     inputs:
       dry_run:
@@ -31,7 +29,7 @@ jobs:
           NTFY_TOKEN: ${{ secrets.NTFY_TOKEN }}
           NTFY_SERVER: ${{ vars.NTFY_SERVER }}
           FEEDBACK_BASE_URL: ${{ vars.FEEDBACK_BASE_URL }}
-          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run }}
+          DRY_RUN: ${{ inputs.dry_run }}
         run: |
           if [ "$DRY_RUN" = "true" ]; then
             python watchdog.py --dry-run
@@ -41,7 +39,7 @@ jobs:
             python watchdog.py
           fi
       - name: Persist deduplication state
-        if: ${{ github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.dry_run == false) }}
+        if: ${{ inputs.dry_run == false }}
         run: |
           if ! git diff --quiet -- state.json; then
             git config user.name 'github-actions[bot]'
