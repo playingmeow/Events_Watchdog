@@ -1,0 +1,51 @@
+name: Events Watchdog
+on:
+  schedule:
+    - cron: '15 1 * * 6' # Saturday 09:15 SGT; GitHub may delay
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Test only (no notifications or state changes)'
+        required: true
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: events-watchdog
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - name: Unit tests
+        run: python -m unittest discover -s tests -v
+      - name: Discover events and promotions
+        env:
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          NTFY_TOKEN: ${{ secrets.NTFY_TOKEN }}
+          NTFY_SERVER: ${{ vars.NTFY_SERVER }}
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run }}
+        run: |
+          if [ "$DRY_RUN" = "true" ]; then
+            python watchdog.py --dry-run
+          elif [ -z "$NTFY_TOPIC" ]; then
+            echo "NTFY_TOPIC secret not configured; skipping live check safely."
+          else
+            python watchdog.py
+          fi
+      - name: Persist deduplication state
+        if: ${{ github.event_name == 'schedule' || inputs.dry_run == false }}
+        run: |
+          if ! git diff --quiet -- state.json; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add state.json
+            git commit -m 'chore: update seen items [skip ci]'
+            git push
+          fi
