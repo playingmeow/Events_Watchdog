@@ -167,6 +167,14 @@ def same_oth_notice(a, b):
     left, right = cleaned(a), cleaned(b)
     return min(len(left),len(right)) >= 70 and SequenceMatcher(None,left,right).ratio() >= 0.92
 
+def already_seen_event(item, history):
+    """Recognise OTH reposts across weekly runs, including other channels."""
+    return any(same_oth_notice(item, {"description":entry["text"]}) for entry in history)
+
+def remember_event(item, history, today):
+    if not already_seen_event(item, history):
+        history.append({"text":item["description"], "date":today.isoformat()})
+
 def add_candidate(candidates, item, watch):
     if watch["id"] == "our-tampines-hub":
         if any(same_oth_notice(item, existing) for existing in candidates.values()):
@@ -194,6 +202,7 @@ def run(dry_run=False):
     state = json.loads(state_path.read_text()) if state_path.exists() else {"seen":{},"initialised":[]}
     state.setdefault("seen",{})
     state.setdefault("initialised",[])
+    state.setdefault("oth_history",[])
     now = datetime.now(SGT).date()
     total = 0
     for watch in watches:
@@ -230,9 +239,10 @@ def run(dry_run=False):
             print("WARNING: All feeds failed for",watch["name"])
             continue
         seen = state["seen"].setdefault(watch["id"],{})
+        history = state["oth_history"] if watch["id"] == "our-tampines-hub" else []
         baseline = watch["id"] not in state["initialised"]
         for key,item in candidates.items():
-            if key in seen:
+            if key in seen or (watch["id"] == "our-tampines-hub" and already_seen_event(item, history)):
                 continue
             if dry_run:
                 print("[DRY RUN]",watch["name"],item["title"],item["link"])
@@ -241,12 +251,16 @@ def run(dry_run=False):
                 total += 1
             if not dry_run:
                 seen[key] = now.isoformat()
+                if watch["id"] == "our-tampines-hub":
+                    remember_event(item, history, now)
         if not dry_run:
             if baseline:
                 state["initialised"].append(watch["id"])
             cutoff = (now-timedelta(days=365)).isoformat()
             state["seen"][watch["id"]] = {k:v for k,v in seen.items() if v >= cutoff}
     if not dry_run:
+        cutoff = (now-timedelta(days=365)).isoformat()
+        state["oth_history"] = [entry for entry in state["oth_history"] if entry["date"] >= cutoff]
         state_path.write_text(json.dumps(state,indent=2,sort_keys=True)+"\n")
     print("Notifications sent:",total)
 
