@@ -25,10 +25,53 @@ async function github(env, method, body, sha) {
   if (!r.ok) throw new Error("GitHub update failed: " + r.status);
   return r.json();
 }
+
+async function maintenanceDone(request, env, url) {
+  const taskId = url.searchParams.get("task") || "";
+  if (!/^[a-z0-9-]{1,40}$/.test(taskId)) return response("Invalid task", 400, "text/plain");
+  const api = "https://api.github.com/repos/" + REPO + "/contents/maintenance.json";
+  const headers = { authorization: "Bearer " + env.GITHUB_TOKEN, accept: "application/vnd.github+json",
+    "user-agent": "Events-Watchdog-Maintenance", "x-github-api-version": "2022-11-28" };
+  async function load() {
+    const res = await fetch(api, { headers });
+    if (!res.ok) throw new Error("Maintenance read failed: " + res.status);
+    const file = await res.json();
+    return { sha: file.sha, data: JSON.parse(new TextDecoder().decode(decodeBase64(file.content))) };
+  }
+  try {
+    if (request.method === "GET") {
+      const { data } = await load();
+      const task = data.tasks.find(t => t.id === taskId);
+      if (!task) return response("Unknown task", 404, "text/plain");
+      const safeName = task.name.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+      return response('<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><title>Maintenance</title><h2>Mark maintenance done?</h2><p>' + safeName + '</p><form method="POST"><button type="submit">Confirm Done</button></form>');
+    }
+    if (request.method !== "POST") return response("Method not allowed", 405, "text/plain");
+    for (let attempt = 0; attempt < 3; attempt++) {
+      const { sha, data } = await load();
+      const task = data.tasks.find(t => t.id === taskId);
+      if (!task) return response("Unknown task", 404, "text/plain");
+      const today = new Date(Date.now() + 8 * 3600000).toISOString().slice(0, 10);
+      if (task.last_done === today) return response("<h2>Already marked Done today!</h2>");
+      task.last_done = today;
+      const payload = { message: "chore: complete maintenance " + taskId,
+        content: encodeBase64(encoder.encode(JSON.stringify(data, null, 2) + "\\n")), sha };
+      const result = await fetch(api, { method: "PUT",
+        headers: { ...headers, "content-type": "application/json" }, body: JSON.stringify(payload) });
+      if (result.ok) return response("<h2>Saved!</h2><p>Countdown restarted from today.</p>");
+      if (result.status !== 409 && result.status !== 422) throw new Error("Maintenance update failed: " + result.status);
+    }
+    throw new Error("Concurrent updates");
+  } catch (err) {
+    return response("Could not save maintenance. Please try again later.", 503, "text/plain");
+  }
+}
+
 export default {
   async fetch(request, env) {
     if (!env.GITHUB_TOKEN) return response("Not configured", 503, "text/plain");
     const url = new URL(request.url);
+    if (url.pathname === "/maintenance/done") return maintenanceDone(request, env, url);
     if (url.pathname !== "/dismiss") return response("Not found", 404, "text/plain");
     const watch = url.searchParams.get("watch") || "";
     const key = url.searchParams.get("key") || "";
