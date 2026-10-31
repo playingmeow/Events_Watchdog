@@ -80,15 +80,22 @@ def run(dry_run=False):
             continue
         candidates = {}
         success = 0
+        fetched = 0
         for source in sources:
             try:
-                for item in get_feed(source):
+                feed_items = get_feed(source)
+                fetched += len(feed_items)
+                matched = 0
+                for item in feed_items:
                     if relevant(item,watch):
+                        matched += 1
                         key = hashlib.sha256(normalise_url(item["link"]).encode()).hexdigest()[:24]
                         candidates.setdefault(key,item)
+                print(f"[SOURCE] {watch['id']} {source['type']}: fetched={len(feed_items)} matched={matched}")
                 success += 1
             except Exception as exc:
                 print("WARNING:",watch["name"],source["type"],str(exc),file=sys.stderr)
+        print(f"[SUMMARY] {watch['id']}: sources_ok={success}/{len(sources)} fetched={fetched} unique_matches={len(candidates)}")
         if success == 0:
             print("WARNING: All feeds failed for",watch["name"])
             continue
