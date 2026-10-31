@@ -71,8 +71,8 @@ class TelegramPosts(HTMLParser):
     def handle_starttag(self, tag, attrs):
         a = dict(attrs)
         classes = a.get("class","").split()
-        if "tgme_widget_message_wrap" in classes:
-            self.depth += 1
+        if "tgme_widget_message" in classes and a.get("data-post"):
+            self.link = "https://t.me/" + a["data-post"]
         if "tgme_widget_message_text" in classes:
             self.collect = True
             self.text_depth = 1
