@@ -1,0 +1,38 @@
+{
+  "watches": [
+    {
+      "id": "yakiniku-go",
+      "type": "promotion",
+      "name": "Yakiniku-GO",
+      "keywords": [
+        "Yakiniku-GO promotion",
+        "Yakiniku-GO anniversary sale"
+      ],
+      "priority_months": [
+        10
+      ]
+    },
+    {
+      "id": "sq-time-to-fly",
+      "type": "promotion",
+      "name": "Singapore Airlines Time To Fly",
+      "keywords": [
+        "Singapore Airlines Time To Fly sale",
+        "Singapore Airlines fare promotion"
+      ],
+      "priority_months": [
+        10
+      ]
+    },
+    {
+      "id": "heartbeat-bedok",
+      "type": "event",
+      "name": "Heartbeat@Bedok",
+      "keywords": [
+        "Heartbeat@Bedok events",
+        "Heartbeat@Bedok activities"
+      ],
+      "priority_months": []
+    }
+  ]
+}
