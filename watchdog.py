@@ -175,6 +175,18 @@ def remember_event(item, history, today):
     if not already_seen_event(item, history):
         history.append({"text":item["description"], "date":today.isoformat()})
 
+def dismissed_event(item, watch, feedback):
+    """Dismiss a particular event, not its venue or future unrelated sessions."""
+    entries = feedback.get(watch["id"], [])
+    key = story_key(item, watch)
+    for entry in entries:
+        if entry.get("key") == key:
+            return True
+        if watch["id"] == "our-tampines-hub" and entry.get("text"):
+            if same_oth_notice(item, {"description":entry["text"]}):
+                return True
+    return False
+
 def add_candidate(candidates, item, watch):
     if watch["id"] == "our-tampines-hub":
         if any(same_oth_notice(item, existing) for existing in candidates.values()):
@@ -203,6 +215,8 @@ def run(dry_run=False):
     state.setdefault("seen",{})
     state.setdefault("initialised",[])
     state.setdefault("oth_history",[])
+    feedback_path = ROOT/"feedback.json"
+    feedback = json.loads(feedback_path.read_text()) if feedback_path.exists() else {}
     now = datetime.now(SGT).date()
     total = 0
     for watch in watches:
@@ -242,7 +256,7 @@ def run(dry_run=False):
         history = state["oth_history"] if watch["id"] == "our-tampines-hub" else []
         baseline = watch["id"] not in state["initialised"]
         for key,item in candidates.items():
-            if key in seen or (watch["id"] == "our-tampines-hub" and already_seen_event(item, history)):
+            if key in seen or dismissed_event(item, watch, feedback) or (watch["id"] == "our-tampines-hub" and already_seen_event(item, history)):
                 continue
             if dry_run:
                 print("[DRY RUN]",watch["name"],item["title"],item["link"])
