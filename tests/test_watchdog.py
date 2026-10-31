@@ -1,6 +1,6 @@
 import unittest
 from datetime import datetime, timezone, timedelta
-from watchdog import normalise_url, relevant, rss_url, fresh
+from watchdog import normalise_url, relevant, rss_url, fresh, add_candidate
 
 class WatchdogTests(unittest.TestCase):
     def test_tracking_removed(self):
@@ -24,6 +24,17 @@ class WatchdogTests(unittest.TestCase):
         self.assertFalse(fresh({"published":"Mon, 01 Sep 2025 12:00:00 GMT"},now))
         self.assertFalse(fresh({"published":""},now))
         self.assertFalse(fresh({"published":"Sun, 01 Nov 2026 12:00:00 GMT"},now))
+
+    def test_oth_cross_channel_duplicate_and_distinct_notice(self):
+        watch = {"id":"our-tampines-hub"}
+        candidates = {}
+        a = {"title":"Notice","description":"Attention Tampines residents and hub visitors! The OTH Hawker Centre will be closed for spring cleaning on 3 and 4 November from 7am to 11pm. This is to ensure a clean and pleasant environment.","link":"https://t.me/OTHcommunity/676"}
+        b = dict(a, link="https://t.me/OTHlifestyle/528", description=a["description"].replace("11pm.","11pm ."))
+        different = dict(a,link="https://t.me/OTHsports/618",description="Attention Tampines residents! The OTH Netball Fiesta will be held on 8 November from 9am to 6pm. Register your team for a full day of exciting matches and friendly competition.")
+        self.assertTrue(add_candidate(candidates,a,watch))
+        self.assertFalse(add_candidate(candidates,b,watch))
+        self.assertTrue(add_candidate(candidates,different,watch))
+        self.assertEqual(len(candidates),2)
 
     def test_rss_url(self):
         self.assertIn("news.google.com",rss_url({"type":"google_news_rss","query":"test"}))
