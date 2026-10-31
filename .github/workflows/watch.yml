@@ -1,7 +1,7 @@
 name: Events Watchdog
 on:
   schedule:
-    - cron: '15 1 * * 6' # Saturday 09:15 SGT; GitHub may delay
+    - cron: '0 13 * * 6' # Saturday 21:00 SGT; GitHub may delay
   workflow_dispatch:
     inputs:
       dry_run:
