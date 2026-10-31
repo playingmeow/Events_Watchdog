@@ -1,5 +1,6 @@
 import unittest
-from watchdog import normalise_url, relevant, rss_url
+from datetime import datetime, timezone, timedelta
+from watchdog import normalise_url, relevant, rss_url, fresh
 
 class WatchdogTests(unittest.TestCase):
     def test_tracking_removed(self):
@@ -16,6 +17,13 @@ class WatchdogTests(unittest.TestCase):
         sq = {"keywords":["singapore airlines","time to fly"],"deal_words":yakiniku["deal_words"]}
         self.assertTrue(relevant({"title":"Yakiniku-GO to offer 50% OFF Set Meals from S$8.90","description":""},yakiniku))
         self.assertTrue(relevant({"title":"Singapore Airlines and Scoot to offer discounted tickets at Time To Fly Travel Fair 2026","description":""},sq))
+
+    def test_freshness(self):
+        now = datetime(2026,10,31,tzinfo=timezone.utc)
+        self.assertTrue(fresh({"published":"Fri, 30 Oct 2026 12:00:00 GMT"},now))
+        self.assertFalse(fresh({"published":"Mon, 01 Sep 2025 12:00:00 GMT"},now))
+        self.assertFalse(fresh({"published":""},now))
+        self.assertFalse(fresh({"published":"Sun, 01 Nov 2026 12:00:00 GMT"},now))
 
     def test_rss_url(self):
         self.assertIn("news.google.com",rss_url({"type":"google_news_rss","query":"test"}))
