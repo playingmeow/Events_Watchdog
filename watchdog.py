@@ -8,6 +8,7 @@ import re
 import sys
 from datetime import datetime, timedelta, timezone
 from email.utils import parsedate_to_datetime
+from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import quote, urlsplit, urlunsplit, parse_qsl, urlencode
 from urllib.request import Request, urlopen
@@ -55,6 +56,67 @@ def fresh(item, now=None, max_age_days=14):
         return timedelta(0) <= age <= timedelta(days=max_age_days)
     except (KeyError, TypeError, ValueError, OverflowError):
         return False
+
+
+class TelegramPosts(HTMLParser):
+    """Extract public Telegram post text and permalinks without external packages."""
+    def __init__(self):
+        super().__init__()
+        self.posts = []
+        self.depth = 0
+        self.collect = False
+        self.text_depth = 0
+        self.parts = []
+        self.link = ""
+    def handle_starttag(self, tag, attrs):
+        a = dict(attrs)
+        classes = a.get("class","").split()
+        if "tgme_widget_message_wrap" in classes:
+            self.depth += 1
+        if "tgme_widget_message_text" in classes:
+            self.collect = True
+            self.text_depth = 1
+            self.parts = []
+        elif self.collect:
+            self.text_depth += 1
+        if "tgme_widget_message_date" in classes and a.get("href","").startswith("https://t.me/"):
+            self.link = a["href"]
+    def handle_endtag(self, tag):
+        if self.collect:
+            self.text_depth -= 1
+            if self.text_depth == 0:
+                self.collect = False
+                body = " ".join(" ".join(self.parts).split())
+                if body:
+                    self.posts.append({"title":body[:180],"description":body,"link":self.link or "https://t.me/s/Heartbeatbedok","published":""})
+                self.link = ""
+    def handle_data(self, data):
+        if self.collect:
+            self.parts.append(data)
+
+def telegram_feed(source):
+    req = Request(source["url"],headers={"User-Agent":"Mozilla/5.0 EventsWatchdog/0.1"})
+    with urlopen(req,timeout=12) as response:
+        page = response.read(1500000).decode("utf-8","replace")
+    parser = TelegramPosts()
+    parser.feed(page)
+    return parser.posts
+
+def upcoming_event(item, today=None):
+    """Require an explicit upcoming date; never alert on undated posts."""
+    current = today or datetime.now(SGT).date()
+    text = item["description"]
+    months = "January February March April May June July August September October November December"
+    month_names = {name.lower():i for i,name in enumerate(months.split(),1)}
+    for m in re.finditer(r"\\b(\\d{1,2})\\s*(?:[-–]\\s*\\d{1,2}\\s*)?(January|February|March|April|May|June|July|August|September|October|November|December)\\s*(20\\d{2})?\\b",text,re.I):
+        day,month,year = int(m.group(1)),month_names[m.group(2).lower()],int(m.group(3) or current.year)
+        try:
+            event_date = datetime(year,month,day).date()
+            if current <= event_date <= current+timedelta(days=60):
+                return True
+        except ValueError:
+            pass
+    return False
 
 def relevant(item,watch):
     content = (item["title"]+" "+item["description"]).lower()
@@ -112,11 +174,12 @@ def run(dry_run=False):
         fetched = 0
         for source in sources:
             try:
-                feed_items = get_feed(source)
+                feed_items = telegram_feed(source) if source['type'] == 'telegram_public' else get_feed(source)
                 fetched += len(feed_items)
                 matched = 0
                 for item in feed_items:
-                    if relevant(item,watch) and fresh(item, max_age_days=watch.get("max_age_days",14)):
+                    timely = upcoming_event(item) if source["type"] == "telegram_public" else fresh(item, max_age_days=watch.get("max_age_days",14))
+                    if timely and (source["type"] == "telegram_public" or relevant(item,watch)):
                         matched += 1
                         key = hashlib.sha256(story_key(item,watch).encode()).hexdigest()[:24]
                         candidates.setdefault(key,item)
