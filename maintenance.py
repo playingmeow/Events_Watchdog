@@ -37,7 +37,7 @@ def run_maintenance(dry_run=False):
         link = base + "/maintenance/done?task=" + quote(task["id"], safe="")
         watch = {"name": "A30 Pro maintenance"}
         item = {"title": task["name"] + " — due", "link": link}
-        send_ntfy(os.environ["NTFY_TOPIC"], watch, item, link)
+        send_ntfy(os.environ["NTFY_TOPIC"], watch, item, link, action_label="Done")
         notified[task["id"]] = task.get("last_done") or "initial"
     if not dry_run:
         state_path.write_text(json.dumps(state, indent=2, sort_keys=True) + "\n")
