@@ -12,13 +12,19 @@
     {
       "id": "dust-bag",
       "name": "Inspect self-empty station dust bag",
-      "interval_days": 30,
+      "interval_days": 60,
       "last_done": "2026-10-31"
     },
     {
       "id": "hepa",
       "name": "Inspect HEPA filter condition",
       "interval_days": 60,
+      "last_done": "2026-10-24"
+    },
+    {
+      "id": "roller",
+      "name": "Clean and inspect main roller and side brushes",
+      "interval_days": 30,
       "last_done": "2026-10-24"
     }
   ]
