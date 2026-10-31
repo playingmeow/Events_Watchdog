@@ -10,6 +10,28 @@
       ],
       "priority_months": [
         10
+      ],
+      "enabled": true,
+      "sources": [
+        {
+          "type": "google_news_rss",
+          "query": "\"Yakiniku-GO\" (promotion OR anniversary OR sale OR offer) Singapore"
+        },
+        {
+          "type": "bing_news_rss",
+          "query": "\"Yakiniku-GO\" promotion Singapore"
+        }
+      ],
+      "deal_words": [
+        "promotion",
+        "promo",
+        "sale",
+        "offer",
+        "discount",
+        "anniversary",
+        "deal",
+        "fare",
+        "special"
       ]
     },
     {
@@ -22,6 +44,28 @@
       ],
       "priority_months": [
         10
+      ],
+      "enabled": true,
+      "sources": [
+        {
+          "type": "google_news_rss",
+          "query": "\"Singapore Airlines\" (\"Time To Fly\" OR promotion OR \"fare sale\") Singapore"
+        },
+        {
+          "type": "bing_news_rss",
+          "query": "\"Singapore Airlines\" \"Time To Fly\" sale"
+        }
+      ],
+      "deal_words": [
+        "promotion",
+        "promo",
+        "sale",
+        "offer",
+        "discount",
+        "anniversary",
+        "deal",
+        "fare",
+        "special"
       ]
     },
     {
@@ -32,7 +76,18 @@
         "Heartbeat@Bedok events",
         "Heartbeat@Bedok activities"
       ],
-      "priority_months": []
+      "priority_months": [],
+      "enabled": true,
+      "sources": [
+        {
+          "type": "google_news_rss",
+          "query": "\"Heartbeat@Bedok\" (event OR workshop OR activity OR programme)"
+        },
+        {
+          "type": "bing_news_rss",
+          "query": "\"Heartbeat@Bedok\" events"
+        }
+      ]
     }
   ]
 }
