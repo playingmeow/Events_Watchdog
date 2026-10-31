@@ -108,7 +108,7 @@ def upcoming_event(item, today=None):
     text = item["description"]
     months = "January February March April May June July August September October November December"
     month_names = {name.lower():i for i,name in enumerate(months.split(),1)}
-    for m in re.finditer(r"\\b(\\d{1,2})\\s*(?:[-–]\\s*\\d{1,2}\\s*)?(January|February|March|April|May|June|July|August|September|October|November|December)\\s*(20\\d{2})?\\b",text,re.I):
+    for m in re.finditer(r"\b(\d{1,2})\s*(?:[-–]\s*\d{1,2}\s*)?(January|February|March|April|May|June|July|August|September|October|November|December)\s*(20\d{2})?\b",text,re.I):
         day,month,year = int(m.group(1)),month_names[m.group(2).lower()],int(m.group(3) or current.year)
         try:
             event_date = datetime(year,month,day).date()
