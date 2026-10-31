@@ -1,4 +1,6 @@
 import unittest
+import json
+from pathlib import Path
 from datetime import datetime, date, timezone, timedelta
 from watchdog import normalise_url, relevant, rss_url, fresh, add_candidate, upcoming_event, already_seen_event, remember_event, dismissed_event, feedback_allowed, feedback_url
 
@@ -72,6 +74,16 @@ class WatchdogTests(unittest.TestCase):
         self.assertTrue(feedback_allowed(watch, event))
         self.assertFalse(feedback_allowed(watch, notice))
         self.assertFalse(feedback_allowed({"id":"sq-time-to-fly", "type":"promotion"}, event))
+
+    def test_saved_feedback_roundtrip_suppresses_exact_event(self):
+        feedback = json.loads((Path(__file__).resolve().parents[1] / "feedback.json").read_text())
+        watch = {"id": "heartbeat-bedok"}
+        dummy = {"title": "[TEST ONLY] Not Interested button verification",
+                 "description": "[TEST ONLY] Not Interested button verification. Not a real event.",
+                 "link": "https://github.com/playingmeow/Events_Watchdog"}
+        self.assertTrue(dismissed_event(dummy, watch, feedback))
+        unrelated = dict(dummy, link="https://github.com/playingmeow/Events_Watchdog/issues/1")
+        self.assertFalse(dismissed_event(unrelated, watch, feedback))
 
     def test_rss_url(self):
         self.assertIn("news.google.com",rss_url({"type":"google_news_rss","query":"test"}))
