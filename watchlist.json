@@ -16,10 +16,6 @@
         {
           "type": "google_news_rss",
           "query": "\"Yakiniku-GO\" (promotion OR anniversary OR sale OR offer) Singapore"
-        },
-        {
-          "type": "bing_news_rss",
-          "query": "\"Yakiniku-GO\" promotion Singapore"
         }
       ],
       "deal_words": [
@@ -50,10 +46,6 @@
         {
           "type": "google_news_rss",
           "query": "\"Singapore Airlines\" (\"Time To Fly\" OR promotion OR \"fare sale\") Singapore"
-        },
-        {
-          "type": "bing_news_rss",
-          "query": "\"Singapore Airlines\" \"Time To Fly\" sale"
         }
       ],
       "deal_words": [
@@ -82,10 +74,6 @@
         {
           "type": "google_news_rss",
           "query": "\"Heartbeat@Bedok\" (event OR workshop OR activity OR programme)"
-        },
-        {
-          "type": "bing_news_rss",
-          "query": "\"Heartbeat@Bedok\" events"
         }
       ]
     }
