@@ -5,8 +5,8 @@
       "type": "promotion",
       "name": "Yakiniku-GO",
       "keywords": [
-        "Yakiniku-GO promotion",
-        "Yakiniku-GO anniversary sale"
+        "yakiniku-go",
+        "yakiniku go"
       ],
       "priority_months": [
         10
@@ -35,8 +35,8 @@
       "type": "promotion",
       "name": "Singapore Airlines Time To Fly",
       "keywords": [
-        "Singapore Airlines Time To Fly sale",
-        "Singapore Airlines fare promotion"
+        "singapore airlines",
+        "time to fly"
       ],
       "priority_months": [
         10
@@ -65,8 +65,9 @@
       "type": "event",
       "name": "Heartbeat@Bedok",
       "keywords": [
-        "Heartbeat@Bedok events",
-        "Heartbeat@Bedok activities"
+        "heartbeat@bedok",
+        "heartbeat at bedok",
+        "heartbeat @ bedok"
       ],
       "priority_months": [],
       "enabled": true,
