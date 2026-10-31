@@ -1,13 +1,4 @@
 {
-  "event_catalog": {
-    "heartbeat-bedok": {
-      "eeeeeeeeeeeeeeeeeeeeeeee": {
-        "date": "2026-10-31",
-        "story_key": "test:ntfy-feedback-roundtrip",
-        "text": "[TEST ONLY] Not Interested button verification. Not a real event."
-      }
-    }
-  },
   "initialised": [],
   "seen": {}
 }
