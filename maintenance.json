@@ -57,11 +57,13 @@
     {
       "id": "princess-antiflea",
       "name": "Princess — anti-flea application",
-      "kind": "calendar_month",
+      "kind": "interval",
       "last_done": null,
       "initial_due": "2026-11-01",
       "nag_daily": true,
-      "enabled": true
+      "enabled": true,
+      "interval_days": 30,
+      "note": "Temporary 30-day recurrence pending calendar-month code support"
     }
   ]
 }
