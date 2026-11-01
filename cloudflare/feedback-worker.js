@@ -48,7 +48,7 @@ async function dashboard(env) {
       const h=t.history||[];
       summary=h.length+" completions; "+h.filter(x=>x.days_late===0).length+" on time; "+h.reduce((s,x)=>s+(x.days_late||0),0)+" late days";
     }
-    const status=t.kind==="daily"&&(t.completed_dates||[]).includes(today) ? "Done today" : due<=today ? "Due / overdue" : "Next "+due;
+    const status=t.kind==="daily" && today<t.initial_due ? "Starts "+t.initial_due : t.kind==="daily"&&(t.completed_dates||[]).includes(today) ? "Done today" : due<=today ? "Due / overdue" : "Next "+due;
     return "<tr><td>"+esc(t.name)+"</td><td>"+esc(status)+"</td><td>"+esc(summary)+"</td></tr>";
   }).join("");
   return response('<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><title>Meow Accountability</title><style>body{font:16px system-ui;max-width:850px;margin:32px auto;padding:0 16px}table{border-collapse:collapse;width:100%}td,th{padding:12px;border-bottom:1px solid #ddd;text-align:left}</style><h1>Meow Accountability</h1><p>Today: '+today+'</p><table><tr><th>Task</th><th>Status</th><th>History</th></tr>'+rows+'</table><p><small>Daily completion is counted only when Done is tapped; it does not prove consumption.</small></p>');
