@@ -6,9 +6,16 @@
       "id": "sensors",
       "name": "Clean sensors and charging contacts",
       "interval_days": 30,
-      "last_done": null,
+      "last_done": "2026-11-01",
       "initial_due": "2026-10-31",
-      "nag_daily": true
+      "nag_daily": true,
+      "history": [
+        {
+          "done": "2026-11-01",
+          "due": "2026-10-31",
+          "days_late": 1
+        }
+      ]
     },
     {
       "id": "dust-bag",
