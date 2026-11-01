@@ -25,19 +25,25 @@
       "nag_daily": true
     },
     {
-      "id": "roller",
-      "name": "Clean and inspect main roller and side brushes",
-      "interval_days": 30,
+      "id": "main-brush-clean",
+      "name": "Clean main roller brush",
+      "interval_days": 7,
       "last_done": "2026-11-01",
       "nag_daily": true,
       "history": [
         {
           "done": "2026-11-01",
-          "due": "2026-11-23",
-          "days_late": 0,
-          "note": "Main brush cleaned; side brushes not confirmed"
+          "due": "2026-11-01",
+          "days_late": 0
         }
       ]
+    },
+    {
+      "id": "roller",
+      "name": "Inspect main roller and side brushes for wear",
+      "interval_days": 30,
+      "last_done": "2026-10-24",
+      "nag_daily": true
     },
     {
       "id": "human-vitamins",
