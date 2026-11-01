@@ -6,7 +6,7 @@
       "id": "sensors",
       "name": "Clean sensors and charging contacts",
       "interval_days": 30,
-      "last_done": "2026-11-01",
+      "last_done": null,
       "initial_due": "2026-10-31"
     },
     {
