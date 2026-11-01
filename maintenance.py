@@ -1,42 +1,50 @@
-"""Small maintenance countdown extension for Events_Watchdog."""
+"""Small due-task reminder engine, with daily nags and per-day vitamin tracking."""
 import json
 import os
 from datetime import date, timedelta
-from pathlib import Path
 from urllib.parse import quote
 from watchdog import ROOT, SGT, datetime, send_ntfy
 
 def due_date(task):
+    if task.get("kind") == "daily":
+        return date.fromisoformat(task["initial_due"])
     anchor = task.get("last_done")
-    if anchor:
-        return date.fromisoformat(anchor) + timedelta(days=task["interval_days"])
-    return date.fromisoformat(task["initial_due"])
+    return (date.fromisoformat(anchor) + timedelta(days=task["interval_days"])
+            if anchor else date.fromisoformat(task["initial_due"]))
 
 def due_tasks(data, notified, today):
-    return [task for task in data["tasks"]
-            if due_date(task) <= today and notified.get(task["id"]) != (task.get("last_done") or "initial")]
+    result = []
+    for task in data["tasks"]:
+        if not task.get("enabled", True) or due_date(task) > today:
+            continue
+        if task.get("kind") == "daily":
+            # Each day has its own Done record. No retroactive assumptions.
+            if today.isoformat() in task.get("completed_dates", []):
+                continue
+        elif task.get("last_done") and date.fromisoformat(task["last_done"]) >= today:
+            continue
+        if task.get("nag_daily", False) or notified.get(task["id"]) != (task.get("last_done") or "initial"):
+            result.append(task)
+    return result
 
 def run_maintenance(dry_run=False):
-    path = ROOT / "maintenance.json"
-    if not path.exists():
-        return
-    data = json.loads(path.read_text())
+    data = json.loads((ROOT / "maintenance.json").read_text())
     state_path = ROOT / "state.json"
     state = json.loads(state_path.read_text())
     notified = state.setdefault("maintenance_notified", {})
     today = datetime.now(SGT).date()
     tasks = due_tasks(data, notified, today)
-    print(f"[MAINTENANCE] due={len(tasks)}")
+    print(f"[TASKS] due={len(tasks)}")
     for task in tasks:
         if dry_run:
-            print("[DRY RUN MAINTENANCE]", task["name"])
+            print("[DRY RUN TASK]", task["name"])
             continue
         base = os.getenv("FEEDBACK_BASE_URL", "").rstrip("/")
         if not base.startswith("https://"):
-            raise ValueError("FEEDBACK_BASE_URL is required for maintenance Done buttons")
+            raise ValueError("FEEDBACK_BASE_URL required for Done buttons")
         link = base + "/maintenance/done?task=" + quote(task["id"], safe="")
-        watch = {"name": "A30 Pro maintenance"}
-        item = {"title": task["name"] + " — due", "link": link}
+        watch = {"name": "Meow reminders"}
+        item = {"title": task["name"] + " — due" + (" (overdue)" if due_date(task) < today else ""), "link": link}
         send_ntfy(os.environ["NTFY_TOPIC"], watch, item, link, action_label="Done")
         notified[task["id"]] = task.get("last_done") or "initial"
     if not dry_run:
