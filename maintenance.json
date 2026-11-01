@@ -38,7 +38,8 @@
       "initial_due": "2026-11-02",
       "completed_dates": [],
       "nag_daily": true,
-      "enabled": true
+      "enabled": false,
+      "note": "Enable only after confirming public GitHub repository visibility is acceptable"
     },
     {
       "id": "princess-antiflea",
