@@ -20,5 +20,19 @@ class MaintenanceTests(unittest.TestCase):
         task["last_done"] = "2026-11-01"
         self.assertEqual(due_tasks(data, {"dust-bag":"2026-10-01"}, date(2026,11,2)), [])
 
+    def test_daily_nag_until_done(self):
+        task = {"id":"vitamins","kind":"daily","initial_due":"2026-11-02","completed_dates":[],"nag_daily":True}
+        self.assertEqual(due_tasks({"tasks":[task]}, {}, date(2026,11,1)), [])
+        self.assertEqual(len(due_tasks({"tasks":[task]}, {}, date(2026,11,2))), 1)
+        self.assertEqual(len(due_tasks({"tasks":[task]}, {}, date(2026,11,3))), 1)
+        task["completed_dates"].append("2026-11-03")
+        self.assertEqual(due_tasks({"tasks":[task]}, {}, date(2026,11,3)), [])
+
+    def test_interval_nags_and_disabled_tasks(self):
+        task = {"id":"sensors","last_done":None,"initial_due":"2026-10-31","nag_daily":True}
+        self.assertEqual(len(due_tasks({"tasks":[task]}, {"sensors":"initial"}, date(2026,11,2))), 1)
+        task["enabled"] = False
+        self.assertEqual(due_tasks({"tasks":[task]}, {}, date(2026,11,2)), [])
+
 if __name__ == "__main__":
     unittest.main()
