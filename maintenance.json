@@ -57,13 +57,11 @@
     {
       "id": "princess-antiflea",
       "name": "Princess — anti-flea application",
-      "kind": "interval",
-      "interval_days": null,
+      "kind": "calendar_month",
       "last_done": null,
-      "initial_due": "2026-11-02",
+      "initial_due": "2026-11-01",
       "nag_daily": true,
-      "enabled": false,
-      "note": "Set product-specific interval and last application date before enabling"
+      "enabled": true
     }
   ]
 }
