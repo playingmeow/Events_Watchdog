@@ -7,25 +7,49 @@
       "name": "Clean sensors and charging contacts",
       "interval_days": 30,
       "last_done": null,
-      "initial_due": "2026-10-31"
+      "initial_due": "2026-10-31",
+      "nag_daily": true
     },
     {
       "id": "dust-bag",
       "name": "Inspect self-empty station dust bag",
       "interval_days": 60,
-      "last_done": "2026-10-31"
+      "last_done": "2026-10-31",
+      "nag_daily": true
     },
     {
       "id": "hepa",
       "name": "Inspect HEPA filter condition",
       "interval_days": 60,
-      "last_done": "2026-10-24"
+      "last_done": "2026-10-24",
+      "nag_daily": true
     },
     {
       "id": "roller",
       "name": "Clean and inspect main roller and side brushes",
       "interval_days": 30,
-      "last_done": "2026-10-24"
+      "last_done": "2026-10-24",
+      "nag_daily": true
+    },
+    {
+      "id": "human-vitamins",
+      "name": "Human Meow — daily vitamins",
+      "kind": "daily",
+      "initial_due": "2026-11-02",
+      "completed_dates": [],
+      "nag_daily": true,
+      "enabled": true
+    },
+    {
+      "id": "princess-antiflea",
+      "name": "Princess — anti-flea application",
+      "kind": "interval",
+      "interval_days": null,
+      "last_done": null,
+      "initial_due": "2026-11-02",
+      "nag_daily": true,
+      "enabled": false,
+      "note": "Set product-specific interval and last application date before enabling"
     }
   ]
 }
