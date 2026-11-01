@@ -26,6 +26,34 @@ async function github(env, method, body, sha) {
   return r.json();
 }
 
+async function dashboard(env) {
+  const api = "https://api.github.com/repos/" + REPO + "/contents/maintenance.json";
+  const r = await fetch(api, {headers:{authorization:"Bearer "+env.GITHUB_TOKEN,accept:"application/vnd.github+json","user-agent":"Meow-Dashboard"}});
+  if (!r.ok) return response("Dashboard unavailable",503,"text/plain");
+  const file = await r.json();
+  const data = JSON.parse(new TextDecoder().decode(decodeBase64(file.content)));
+  const today = new Date(Date.now()+8*3600000).toISOString().slice(0,10);
+  const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  const days = (a,b) => Math.round((Date.parse(a+"T00:00:00Z")-Date.parse(b+"T00:00:00Z"))/86400000);
+  const rows = data.tasks.filter(t=>t.enabled!==false).map(t=>{
+    let due,summary;
+    if(t.kind==="daily"){
+      due=t.initial_due;
+      const elapsed=Math.max(0,days(today,due)+1);
+      const taken=(t.completed_dates||[]).filter(d=>d>=due&&d<=today).length;
+      summary=elapsed ? taken+"/"+elapsed+" days ("+Math.round(taken/elapsed*100)+"%)" : "Starts "+due;
+      due=today;
+    }else{
+      due=t.last_done&&t.interval_days ? new Date(Date.parse(t.last_done+"T00:00:00Z")+t.interval_days*86400000).toISOString().slice(0,10) : t.initial_due;
+      const h=t.history||[];
+      summary=h.length+" completions; "+h.filter(x=>x.days_late===0).length+" on time; "+h.reduce((s,x)=>s+(x.days_late||0),0)+" late days";
+    }
+    const status=t.kind==="daily"&&(t.completed_dates||[]).includes(today) ? "Done today" : due<=today ? "Due / overdue" : "Next "+due;
+    return "<tr><td>"+esc(t.name)+"</td><td>"+esc(status)+"</td><td>"+esc(summary)+"</td></tr>";
+  }).join("");
+  return response('<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><title>Meow Accountability</title><style>body{font:16px system-ui;max-width:850px;margin:32px auto;padding:0 16px}table{border-collapse:collapse;width:100%}td,th{padding:12px;border-bottom:1px solid #ddd;text-align:left}</style><h1>Meow Accountability</h1><p>Today: '+today+'</p><table><tr><th>Task</th><th>Status</th><th>History</th></tr>'+rows+'</table><p><small>Daily completion is counted only when Done is tapped; it does not prove consumption.</small></p>');
+}
+
 async function maintenanceDone(request, env, url) {
   const taskId = url.searchParams.get("task") || "";
   if (!/^[a-z0-9-]{1,40}$/.test(taskId)) return response("Invalid task", 400, "text/plain");
@@ -52,8 +80,17 @@ async function maintenanceDone(request, env, url) {
       const task = data.tasks.find(t => t.id === taskId);
       if (!task) return response("Unknown task", 404, "text/plain");
       const today = new Date(Date.now() + 8 * 3600000).toISOString().slice(0, 10);
-      if (task.last_done === today) return response("<h2>Already marked Done today!</h2>");
-      task.last_done = today;
+      if (task.kind === "daily") {
+        task.completed_dates ||= [];
+        if (task.completed_dates.includes(today)) return response("<h2>Already marked Done today!</h2>");
+        task.completed_dates.push(today);
+      } else {
+        if (task.last_done === today) return response("<h2>Already marked Done today!</h2>");
+        const due = task.last_done && task.interval_days ? new Date(Date.parse(task.last_done + "T00:00:00Z") + task.interval_days * 86400000).toISOString().slice(0,10) : task.initial_due;
+        task.history ||= [];
+        task.history.push({done:today, due, days_late:Math.max(0,Math.round((Date.parse(today+"T00:00:00Z")-Date.parse(due+"T00:00:00Z"))/86400000))});
+        task.last_done = today;
+      }
       const payload = { message: "chore: complete maintenance " + taskId,
         content: encodeBase64(encoder.encode(JSON.stringify(data, null, 2) + "\n")), sha };
       const result = await fetch(api, { method: "PUT",
@@ -71,6 +108,7 @@ export default {
   async fetch(request, env) {
     if (!env.GITHUB_TOKEN) return response("Not configured", 503, "text/plain");
     const url = new URL(request.url);
+    if (url.pathname === "/dashboard" && request.method === "GET") return dashboard(env);
     if (url.pathname === "/maintenance/done") return maintenanceDone(request, env, url);
     if (url.pathname !== "/dismiss") return response("Not found", 404, "text/plain");
     const watch = url.searchParams.get("watch") || "";
