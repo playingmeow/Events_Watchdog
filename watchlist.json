@@ -106,6 +106,40 @@
         }
       ],
       "max_age_days": 14
+    },
+    {
+      "id": "bigme-b751cs-1111",
+      "type": "promotion",
+      "name": "Bigme B751C S 11.11 Sale",
+      "keywords": [
+        "bigme",
+        "b751c s",
+        "b751cs"
+      ],
+      "priority_months": [
+        11
+      ],
+      "enabled": true,
+      "sources": [
+        {
+          "type": "google_news_rss",
+          "query": "\"Bigme\" \"B751C S\" (11.11 OR 11/11 OR sale OR discount OR coupon OR price)"
+        },
+        {
+          "type": "bing_news_rss",
+          "query": "\"Bigme B751C S\" sale coupon price"
+        }
+      ],
+      "deal_words": [
+        "sale",
+        "discount",
+        "coupon",
+        "voucher",
+        "11.11",
+        "promotion",
+        "price"
+      ],
+      "note": "RMB 1200 is a projected voucher-adjusted target, not an observed checkout price. RSS only detects public mentions, not live Taobao prices or account-specific coupons."
     }
   ]
 }
