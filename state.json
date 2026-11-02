@@ -6,6 +6,10 @@
     "heartbeat-bedok",
     "our-tampines-hub"
   ],
+  "maintenance_notified": {
+    "human-vitamins": "initial",
+    "princess-antiflea": "initial"
+  },
   "oth_history": [
     {
       "date": "2026-10-31",
