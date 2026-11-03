@@ -4,10 +4,12 @@
     "yakiniku-go",
     "sq-time-to-fly",
     "heartbeat-bedok",
-    "our-tampines-hub"
+    "our-tampines-hub",
+    "bigme-b751cs-1111"
   ],
   "maintenance_notified": {
     "human-vitamins": "initial",
+    "pantry-snooze-test": "initial",
     "princess-antiflea": "initial"
   },
   "oth_history": [
@@ -41,6 +43,7 @@
     }
   ],
   "seen": {
+    "bigme-b751cs-1111": {},
     "heartbeat-bedok": {
       "1b45aac21fa551595144ed80": "2026-10-31",
       "eba70a9b1cb12e78a65e1b9e": "2026-10-31"
