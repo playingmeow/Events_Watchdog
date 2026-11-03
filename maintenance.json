@@ -77,11 +77,18 @@
       "name": "Run Meow Pantry Tuesday snooze verification (GitHub Actions)",
       "kind": "interval",
       "interval_days": 36500,
-      "last_done": null,
+      "last_done": "2026-11-03",
       "initial_due": "2026-11-03",
       "nag_daily": true,
       "enabled": true,
-      "note": "One-off: manually run playingmeow/Pantry_stock pantry-monday.yml; verify Handwash reappears after 1-day snooze; tap Done to retire reminder."
+      "note": "One-off: manually run playingmeow/Pantry_stock pantry-monday.yml; verify Handwash reappears after 1-day snooze; tap Done to retire reminder.",
+      "history": [
+        {
+          "done": "2026-11-03",
+          "due": "2026-11-03",
+          "days_late": 0
+        }
+      ]
     }
   ]
 }
