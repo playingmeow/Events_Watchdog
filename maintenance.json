@@ -96,6 +96,16 @@
           "days_late": 0
         }
       ]
+    },
+    {
+      "id": "review-kiv-opportunities",
+      "name": "Review KIV shortlist and look for more interesting opportunities",
+      "kind": "interval",
+      "interval_days": 36500,
+      "initial_due": "2026-11-05",
+      "nag_daily": true,
+      "enabled": true,
+      "note": "One-off follow-up; tap Done after reviewing to retire the reminder."
     }
   ]
 }
