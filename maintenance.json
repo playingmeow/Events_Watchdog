@@ -65,12 +65,19 @@
       "id": "princess-antiflea",
       "name": "Princess — anti-flea application",
       "kind": "interval",
-      "last_done": null,
+      "last_done": "2026-11-04",
       "initial_due": "2026-11-01",
       "nag_daily": true,
       "enabled": true,
       "interval_days": 30,
-      "note": "Temporary 30-day recurrence pending calendar-month code support"
+      "note": "Temporary 30-day recurrence pending calendar-month code support",
+      "history": [
+        {
+          "done": "2026-11-04",
+          "due": "2026-11-01",
+          "days_late": 3
+        }
+      ]
     },
     {
       "id": "pantry-snooze-test",
