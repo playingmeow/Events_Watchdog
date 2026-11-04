@@ -159,6 +159,16 @@
       "last_done": null,
       "nag_daily": true,
       "enabled": true
+    },
+    {
+      "id": "toto-missed-system7-4232",
+      "name": "TOTO 4232 — check hypothetical unbought System 7 winnings",
+      "kind": "interval",
+      "interval_days": 36500,
+      "initial_due": "2026-11-06",
+      "nag_daily": true,
+      "enabled": true,
+      "note": "After Thu 5 Nov 2026 draw 4232, ask ChatGPT to compare UNPURCHASED System 7 numbers 06 13 22 29 34 41 47 against official six main and additional numbers, enumerate all 7 combinations and hypothetical winnings using official prize amounts. Do not count this as purchased or actual winnings. Purchased entries are tracked in playingmeow/Meow_SGPools/purchased_toto.txt. Tap Done after review."
     }
   ]
 }
