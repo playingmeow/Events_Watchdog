@@ -126,6 +126,39 @@
       "nag_daily": true,
       "enabled": true,
       "note": "One-time catch-up after travel (26 Dec–6 Jan): review all active ChatGPT threads and generate verified handover summaries, preserving decisions, history, files and unfinished work. Tap Done to retire this one-time reminder. Existing monthly reminder remains separate."
+    },
+    {
+      "id": "japan-aomori-west-inn-2027",
+      "name": "Japan — Contact Guest House Aomori West Inn",
+      "initial_due": "2027-03-01",
+      "note": "One-off: Email aomori.west.inn@gmail.com asking availability and rates for one adult, 23–24 April 2027; female dorm bed preferred or private room. April bookings open March 2027.",
+      "kind": "interval",
+      "interval_days": 36500,
+      "last_done": null,
+      "nag_daily": true,
+      "enabled": true
+    },
+    {
+      "id": "japan-weather-packing-2027",
+      "name": "Japan — Ask ChatGPT for weather and packing check",
+      "initial_due": "2027-04-10",
+      "note": "One-off: Ask ChatGPT to research latest forecasts and expected temperatures for Kawaguchiko 20–23 Apr 2027, Tohoku 24 Apr–2 May, Tokyo 2–5 May. Advise layers, rain, cold mornings, regional variation. Distinguish short-range forecasts from seasonal averages. Use April–May 2027 itinerary.",
+      "kind": "interval",
+      "interval_days": 36500,
+      "last_done": null,
+      "nag_daily": true,
+      "enabled": true
+    },
+    {
+      "id": "japan-haneda-departure-2027",
+      "name": "Japan — Ask ChatGPT to verify Haneda departure",
+      "initial_due": "2027-04-15",
+      "note": "One-off: Ask ChatGPT to verify Scoot TR883 HND T3 5 May 2027 02:20 departure: Japan tax-free Customs/refund process, late-night hours and checked baggage inspection order; Scoot check-in open/close; 4 May holiday Keikyu trains from Shinagawa and last service; airport arrival time; Priority Pass/DragonPass SKY LOUNGE SOUTH and TIAT Lounge eligibility. Separate verified/uncertain and revise departure-night schedule.",
+      "kind": "interval",
+      "interval_days": 36500,
+      "last_done": null,
+      "nag_daily": true,
+      "enabled": true
     }
   ]
 }
