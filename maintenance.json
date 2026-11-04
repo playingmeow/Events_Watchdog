@@ -109,13 +109,13 @@
     },
     {
       "id": "chatgpt-thread-handover",
-      "name": "Review ChatGPT threads and prepare handovers",
+      "name": "Fortnightly ChatGPT thread handovers + monthly data export check",
       "kind": "interval",
-      "interval_days": 30,
-      "initial_due": "2026-12-01",
+      "interval_days": 14,
+      "initial_due": "2026-11-15",
       "nag_daily": true,
       "enabled": true,
-      "note": "Monthly housekeeping (temporary 30-day recurrence): review ALL active ChatGPT threads individually; ask ChatGPT to scan accessible history and summarise confirmed decisions, corrections, rejected options, latest status, outstanding work, files and links into a new-thread handover. Verify before retiring old threads. ChatGPT cannot assume it can automatically access all conversations."
+      "note": "Every 14 days from completion: review ALL active ChatGPT threads individually while still accessible; prepare verified handover summaries of decisions, corrections, rejected options, current status, outstanding work, files and links; move long threads into fresh conversations before context limits. Also check whether the monthly account-wide ChatGPT data export has been requested/downloaded; request it manually through ChatGPT export controls when due (the watchdog cannot export automatically). Verify summaries before retiring old threads. ChatGPT cannot assume access to every conversation. Keep the separate 7 Jan 2027 post-trip catch-up reminder. Tap Done after each review."
     },
     {
       "id": "chatgpt-handover-jan7",
