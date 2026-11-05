@@ -189,6 +189,24 @@
           "days_late": 0
         }
       ]
+    },
+    {
+      "id": "mum-fan-grill",
+      "name": "Clean Mum's fan grille",
+      "kind": "interval",
+      "interval_days": 90,
+      "last_done": "2026-11-04",
+      "initial_due": "2026-11-04",
+      "nag_daily": true,
+      "enabled": true,
+      "note": "Quarterly cleaning; actual last clean 4 Nov 2026. Temporary 90-day interval (calendar 3-month recurrence not yet supported). Unplug fan before cleaning.",
+      "history": [
+        {
+          "done": "2026-11-04",
+          "due": "2026-11-04",
+          "days_late": 0
+        }
+      ]
     }
   ]
 }
