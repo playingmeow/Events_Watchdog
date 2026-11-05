@@ -57,7 +57,9 @@
       "name": "Human Meow — daily vitamins",
       "kind": "daily",
       "initial_due": "2026-11-02",
-      "completed_dates": [],
+      "completed_dates": [
+        "2026-11-05"
+      ],
       "nag_daily": true,
       "enabled": true
     },
