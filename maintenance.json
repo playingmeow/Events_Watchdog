@@ -67,7 +67,7 @@
       "id": "princess-antiflea",
       "name": "Princess — anti-flea application",
       "kind": "interval",
-      "last_done": "2026-11-04",
+      "last_done": "2026-11-05",
       "initial_due": "2026-11-01",
       "nag_daily": true,
       "enabled": true,
@@ -78,6 +78,11 @@
           "done": "2026-11-04",
           "due": "2026-11-01",
           "days_late": 3
+        },
+        {
+          "done": "2026-11-05",
+          "due": "2026-12-04",
+          "days_late": 0
         }
       ]
     },
