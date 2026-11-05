@@ -213,12 +213,18 @@
       "name": "Clean kitchen fan grille",
       "kind": "interval",
       "interval_days": 90,
-      "last_done": null,
-      "initial_due": "2027-02-02",
+      "last_done": "2026-11-05",
+      "initial_due": "2026-11-05",
       "nag_daily": true,
       "enabled": true,
-      "note": "Quarterly cleaning aligned with Mum's fan grille. Last cleaning date unknown; do not assume it was cleaned on 4 Nov 2026. First scheduled check 2 Feb 2027; temporary 90-day recurrence.",
-      "history": []
+      "note": "Kitchen fan grille cleaned 5 Nov 2026; quarterly reminder uses temporary 90-day interval (calendar 3-month recurrence not yet supported).",
+      "history": [
+        {
+          "done": "2026-11-05",
+          "due": "2026-11-05",
+          "days_late": 0
+        }
+      ]
     }
   ]
 }
