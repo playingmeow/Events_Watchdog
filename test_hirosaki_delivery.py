@@ -18,7 +18,7 @@ def main():
         raise SystemExit("FEEDBACK_BASE_URL is missing or insecure")
     server = (os.environ.get("NTFY_SERVER") or "https://ntfy.sh").rstrip("/")
     headers = {
-        "Title": "[TEST ONLY] Hirosaki Sakura Festival — ntfy",
+        "Title": "[TEST ONLY] Hirosaki Sakura Festival - ntfy",
         "Tags": "test_tube",
         "Click": base + "/dashboard",
         "Content-Type": "text/plain; charset=utf-8",
