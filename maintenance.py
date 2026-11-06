@@ -8,6 +8,8 @@ from watchdog import ROOT, SGT, datetime, send_ntfy
 def due_date(task):
     if task.get("kind") == "daily":
         return date.fromisoformat(task["initial_due"])
+    if task.get("kind") == "one_off":
+        return date.fromisoformat(task["initial_due"])
     anchor = task.get("last_done")
     return (date.fromisoformat(anchor) + timedelta(days=task["interval_days"])
             if anchor else date.fromisoformat(task["initial_due"]))
@@ -16,6 +18,12 @@ def due_tasks(data, notified, today):
     result = []
     for task in data["tasks"]:
         if not task.get("enabled", True) or due_date(task) > today:
+            continue
+        if task.get("kind") == "one_off":
+            # One-off alerts are valid only on the specified day and never nag later.
+            if due_date(task) != today or notified.get(task["id"]) == "sent":
+                continue
+            result.append(task)
             continue
         if task.get("kind") == "daily":
             # Each day has its own Done record. No retroactive assumptions.
@@ -43,6 +51,18 @@ def run_maintenance(dry_run=False):
         if not base.startswith("https://"):
             raise ValueError("FEEDBACK_BASE_URL required for Done buttons")
         link = base + "/maintenance/done?task=" + quote(task["id"], safe="")
+        if task.get("kind") == "one_off":
+            from urllib.request import Request, urlopen
+            from urllib.parse import quote as urlquote
+            server = (os.getenv("NTFY_SERVER") or "https://ntfy.sh").rstrip("/")
+            headers = {"Title": task["name"], "Tags": "calendar", "Content-Type": "text/plain; charset=utf-8", "Click": base + "/dashboard"}
+            if os.getenv("NTFY_TOKEN"):
+                headers["Authorization"] = "Bearer " + os.environ["NTFY_TOKEN"]
+            req = Request(server + "/" + urlquote(os.environ["NTFY_TOPIC"], safe=""), data=task["message"].encode("utf-8"), headers=headers, method="POST")
+            with urlopen(req, timeout=12) as resp:
+                resp.read()
+            notified[task["id"]] = "sent"
+            continue
         watch = {"name": "Meow reminders"}
         item = {"title": task["name"] + " — due" + (" (overdue)" if due_date(task) < today else ""), "link": link}
         send_ntfy(os.environ["NTFY_TOPIC"], watch, item, link, action_label="Done")
