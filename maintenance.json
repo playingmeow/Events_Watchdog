@@ -233,6 +233,17 @@
           "days_late": 0
         }
       ]
+    },
+    {
+      "id": "hirosaki-sakura-final-2027",
+      "name": "Hirosaki Sakura Festival — Final 2027 Check",
+      "kind": "one_off",
+      "initial_due": "2027-04-23",
+      "expires_after": "2027-04-23",
+      "nag_daily": false,
+      "enabled": true,
+      "message": "Hirosaki Sakura Festival — Final 2027 Check\n\nReview the latest available 2027 reports before visiting Hirosaki Park on Sunday, 25 April.\n\nCheck:\n1. Popular festival food stalls and recommended specialties.\n2. Actual 2027 vendor locations: black konnyaku, ginger miso oden, Dakekimi corn tempura, giant pork buns, apple pie and takoyaki.\n3. Queue lengths and worthwhile stalls.\n4. Cherry blossom conditions, including peak bloom and hanaikada.\n5. Parking availability, congestion and evening departure reports.\n\nPrioritise official information and recent Japanese-language visitor reports. This is a review reminder, not automated research.",
+      "note": "One-off ntfy at daily 09:30 SGT run (10:30 JST), Friday 23 Apr 2027. Expires automatically after that day. No Done action and no repeat."
     }
   ]
 }
