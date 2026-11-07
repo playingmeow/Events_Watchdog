@@ -255,6 +255,39 @@
       "enabled": true,
       "message": "GODIVA FREE WAFFLE BOWL - TWIST!\\n\\nBefore leaving: CHECK THE VOUCHER IS IN YOUR BAG, especially if changing bags.\\n\\nRedeem the complimentary waffle bowl at Bugis Junction, Raffles City or Suntec City. Jewel is excluded.\\n\\nCombine with Central Library mindfulness workshop, 2:00-3:30 PM today.\\n\\nVoucher expires 15 Nov 2026. If today doesn't work, redeem before expiry at an eligible outlet.\\n\\nPriority: Don't let the free chocolate expire!",
       "note": "One-off ntfy at existing daily 09:30 SGT run on Wed 11 Nov 2026; no repeat, expires after the day. Voucher expiry 15 Nov. User requested TWIST flavour."
+    },
+    {
+      "id": "credit-card-check-5",
+      "name": "Credit card bills - check statements and payments (5th)",
+      "kind": "monthly_day",
+      "day_of_month": 5,
+      "initial_due": "2026-12-05",
+      "completed_cycles": [],
+      "nag_daily": true,
+      "enabled": true,
+      "note": "Check all credit card statements, amounts due and payment deadlines. Pay or schedule payments as needed. Tap Done to stop daily nags until next month's 5th."
+    },
+    {
+      "id": "credit-card-check-20",
+      "name": "Credit card bills - check statements and payments (20th)",
+      "kind": "monthly_day",
+      "day_of_month": 20,
+      "initial_due": "2026-11-20",
+      "completed_cycles": [],
+      "nag_daily": true,
+      "enabled": true,
+      "note": "Check all credit card statements, amounts due and payment deadlines. Pay or schedule payments as needed. Tap Done to stop daily nags until next month's 20th."
+    },
+    {
+      "id": "town-council-axs-5",
+      "name": "Town council fees - pay via AXS",
+      "kind": "monthly_day",
+      "day_of_month": 5,
+      "initial_due": "2026-12-05",
+      "completed_cycles": [],
+      "nag_daily": true,
+      "enabled": true,
+      "note": "Pay monthly town council service and conservancy charges via AXS. Confirm payment is successful, then tap Done to stop daily nags until next month's 5th."
     }
   ]
 }
