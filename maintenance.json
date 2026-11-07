@@ -244,6 +244,17 @@
       "enabled": true,
       "message": "Hirosaki Sakura Festival — Final 2027 Check\n\nReview the latest available 2027 reports before visiting Hirosaki Park on Sunday, 25 April.\n\nCheck:\n1. Popular festival food stalls and recommended specialties.\n2. Actual 2027 vendor locations: black konnyaku, ginger miso oden, Dakekimi corn tempura, giant pork buns, apple pie and takoyaki.\n3. Queue lengths and worthwhile stalls.\n4. Cherry blossom conditions, including peak bloom and hanaikada.\n5. Parking availability, congestion and evening departure reports.\n\nPrioritise official information and recent Japanese-language visitor reports. This is a review reminder, not automated research.",
       "note": "One-off ntfy at daily 09:30 SGT run (10:30 JST), Friday 23 Apr 2027. Expires automatically after that day. No Done action and no repeat."
+    },
+    {
+      "id": "godiva-waffle-bowl-2026",
+      "name": "Godiva Complimentary Waffle Bowl - Redeem TWIST",
+      "kind": "one_off",
+      "initial_due": "2026-11-11",
+      "expires_after": "2026-11-11",
+      "nag_daily": false,
+      "enabled": true,
+      "message": "GODIVA FREE WAFFLE BOWL - TWIST!\\n\\nBefore leaving: CHECK THE VOUCHER IS IN YOUR BAG, especially if changing bags.\\n\\nRedeem the complimentary waffle bowl at Bugis Junction, Raffles City or Suntec City. Jewel is excluded.\\n\\nCombine with Central Library mindfulness workshop, 2:00-3:30 PM today.\\n\\nVoucher expires 15 Nov 2026. If today doesn't work, redeem before expiry at an eligible outlet.\\n\\nPriority: Don't let the free chocolate expire!",
+      "note": "One-off ntfy at existing daily 09:30 SGT run on Wed 11 Nov 2026; no repeat, expires after the day. Voucher expiry 15 Nov. User requested TWIST flavour."
     }
   ]
 }
