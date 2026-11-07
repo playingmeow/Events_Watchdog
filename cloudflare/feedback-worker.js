@@ -43,12 +43,23 @@ async function dashboard(env) {
       const taken=(t.completed_dates||[]).filter(d=>d>=due&&d<=today).length;
       summary=elapsed ? taken+"/"+elapsed+" days ("+Math.round(taken/elapsed*100)+"%)" : "Starts "+due;
       due=today;
+    }else if(t.kind==="monthly_day"){
+      const day=t.day_of_month;
+      const current=today.slice(0,8)+String(day).padStart(2,"0");
+      const prev=new Date(Date.parse(today.slice(0,8)+"01T00:00:00Z"));
+      prev.setUTCMonth(prev.getUTCMonth()-1);
+      const previous=prev.toISOString().slice(0,8)+String(day).padStart(2,"0");
+      const cycle=current<=today?current:previous;
+      due=cycle<t.initial_due?t.initial_due:cycle;
+      summary="Monthly on day "+day+"; completed cycles: "+(t.completed_cycles||[]).length;
+      if(cycle>=t.initial_due && (t.completed_cycles||[]).includes(cycle)) summary+="; current cycle done";
     }else{
       due=t.last_done&&t.interval_days ? new Date(Date.parse(t.last_done+"T00:00:00Z")+t.interval_days*86400000).toISOString().slice(0,10) : t.initial_due;
       const h=t.history||[];
       summary=h.length+" completions; "+h.filter(x=>x.days_late===0).length+" on time; "+h.reduce((s,x)=>s+(x.days_late||0),0)+" late days";
     }
-    const status=t.kind==="daily" && today<t.initial_due ? "Starts "+t.initial_due : t.kind==="daily"&&(t.completed_dates||[]).includes(today) ? "Done today" : due<=today ? "Due / overdue" : "Next "+due;
+    const monthlyDone=t.kind==="monthly_day" && (t.completed_cycles||[]).includes(due);
+    const status=monthlyDone ? "Done this cycle" : t.kind==="daily" && today<t.initial_due ? "Starts "+t.initial_due : t.kind==="daily"&&(t.completed_dates||[]).includes(today) ? "Done today" : due<=today ? "Due / overdue" : "Next "+due;
     return "<tr><td>"+esc(t.name)+"</td><td>"+esc(status)+"</td><td>"+esc(summary)+"</td></tr>";
   }).join("");
   return response('<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><title>Meow Accountability</title><style>body{font:16px system-ui;max-width:850px;margin:32px auto;padding:0 16px}table{border-collapse:collapse;width:100%}td,th{padding:12px;border-bottom:1px solid #ddd;text-align:left}</style><h1>Meow Accountability</h1><p>Today: '+today+'</p><table><tr><th>Task</th><th>Status</th><th>History</th></tr>'+rows+'</table><p><small>Daily completion is counted only when Done is tapped; it does not prove consumption.</small></p>');
@@ -80,7 +91,21 @@ async function maintenanceDone(request, env, url) {
       const task = data.tasks.find(t => t.id === taskId);
       if (!task) return response("Unknown task", 404, "text/plain");
       const today = new Date(Date.now() + 8 * 3600000).toISOString().slice(0, 10);
-      if (task.kind === "daily") {
+      if (task.kind === "monthly_day") {
+        const cycle = url.searchParams.get("cycle") || "";
+        const day = task.day_of_month;
+        const current = today.slice(0,8) + String(day).padStart(2,"0");
+        const prev = new Date(Date.parse(today.slice(0,8)+"01T00:00:00Z"));
+        prev.setUTCMonth(prev.getUTCMonth()-1);
+        const previous = prev.toISOString().slice(0,8)+String(day).padStart(2,"0");
+        const active = current <= today ? current : previous;
+        if (active < task.initial_due || cycle !== active) return response("This reminder belongs to an old or inactive cycle.",409,"text/plain");
+        task.completed_cycles ||= [];
+        if (task.completed_cycles.includes(cycle)) return response("<h2>Already Done for this cycle!</h2>");
+        task.completed_cycles.push(cycle);
+        task.history ||= [];
+        task.history.push({done:today,due:cycle,days_late:Math.max(0,Math.round((Date.parse(today+"T00:00:00Z")-Date.parse(cycle+"T00:00:00Z"))/86400000))});
+      } else if (task.kind === "daily") {
         task.completed_dates ||= [];
         if (task.completed_dates.includes(today)) return response("<h2>Already marked Done today!</h2>");
         task.completed_dates.push(today);
@@ -95,7 +120,7 @@ async function maintenanceDone(request, env, url) {
         content: encodeBase64(encoder.encode(JSON.stringify(data, null, 2) + "\n")), sha };
       const result = await fetch(api, { method: "PUT",
         headers: { ...headers, "content-type": "application/json" }, body: JSON.stringify(payload) });
-      if (result.ok) return response("<h2>Saved!</h2><p>Countdown restarted from today.</p>");
+      if (result.ok) return response(task.kind==="monthly_day" ? "<h2>Saved!</h2><p>No more nags until the next scheduled cycle.</p>" : "<h2>Saved!</h2><p>Countdown restarted from today.</p>");
       if (result.status !== 409 && result.status !== 422) throw new Error("Maintenance update failed: " + result.status);
     }
     throw new Error("Concurrent updates");
