@@ -55,7 +55,7 @@ def run_maintenance(dry_run=False):
             from urllib.request import Request, urlopen
             from urllib.parse import quote as urlquote
             server = (os.getenv("NTFY_SERVER") or "https://ntfy.sh").rstrip("/")
-            headers = {"Title": "Hirosaki Sakura Festival - Final 2027 Check", "Tags": "calendar", "Content-Type": "text/plain; charset=utf-8", "Click": base + "/dashboard"}
+            headers = {"Title": task["name"].replace("—", "-").replace("–", "-"), "Tags": "calendar", "Content-Type": "text/plain; charset=utf-8", "Click": base + "/dashboard"}
             if os.getenv("NTFY_TOKEN"):
                 headers["Authorization"] = "Bearer " + os.environ["NTFY_TOKEN"]
             req = Request(server + "/" + urlquote(os.environ["NTFY_TOPIC"], safe=""), data=task["message"].encode("utf-8"), headers=headers, method="POST")
