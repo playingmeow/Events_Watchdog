@@ -1,5 +1,18 @@
 {
-  "event_catalog": {},
+  "event_catalog": {
+    "our-tampines-hub": {
+      "2714e073862c815b0c3511d5": {
+        "date": "2026-11-07",
+        "story_key": "url:https://t.me/OTHsports/619",
+        "text": "\ud83c\udfd1 Ready to hit the court? The OTH Floorball Fiesta 2026 is here! Gather your squad and get ready for an action-packed day of fast-paced floorball. Whether you're competing in the Under 19 or Open category, it's time to showcase your skills! Date: 13 December 2026 Time: 9:00 AM \u2013 6:00 PM Venue: Level 3 Community Auditorium, Our Tampines Hub \ud83d\udcb0 FREE Registration! Format: 3v3 Team Size: Min. 3 to max. 6 players per team Don't miss out on the excitement\u2014secure your spot today! \ud83d\udd17 Sign up here: Https://www.pathway-expert.com/PEOS/index.php?t=OTHFLB2026 Organised by Our Tampines Hub and Tampines West CSN in partnership with Singapore Floorball Association."
+      },
+      "3af88d6d3831ec810dbf3385": {
+        "date": "2026-11-07",
+        "story_key": "url:https://t.me/OTHsports/620",
+        "text": "Attention Tampines residents and hub visitors! No exercise sessions at OTH Gate 1 on 8 November 2026 due to Public Holiday. Wishing all happy holidays."
+      }
+    }
+  },
   "initialised": [
     "yakiniku-go",
     "sq-time-to-fly",
@@ -42,6 +55,14 @@
     {
       "date": "2026-10-31",
       "text": "Celebrate Deepavali at OTH! \ud83e\ude94 Join us as we kick start the celebration of Deepavali with a series of fun and educational activities! \ud83d\uddd3\ufe0f 30 October to 8 November 2026 \u23f1\ufe0f 12pm to 8pm \ud83d\udccd Festive South and Festive Walk West, Level 1 See you there! \ud83d\udc4b"
+    },
+    {
+      "date": "2026-11-07",
+      "text": "\ud83c\udfd1 Ready to hit the court? The OTH Floorball Fiesta 2026 is here! Gather your squad and get ready for an action-packed day of fast-paced floorball. Whether you're competing in the Under 19 or Open category, it's time to showcase your skills! Date: 13 December 2026 Time: 9:00 AM \u2013 6:00 PM Venue: Level 3 Community Auditorium, Our Tampines Hub \ud83d\udcb0 FREE Registration! Format: 3v3 Team Size: Min. 3 to max. 6 players per team Don't miss out on the excitement\u2014secure your spot today! \ud83d\udd17 Sign up here: Https://www.pathway-expert.com/PEOS/index.php?t=OTHFLB2026 Organised by Our Tampines Hub and Tampines West CSN in partnership with Singapore Floorball Association."
+    },
+    {
+      "date": "2026-11-07",
+      "text": "Attention Tampines residents and hub visitors! No exercise sessions at OTH Gate 1 on 8 November 2026 due to Public Holiday. Wishing all happy holidays."
     }
   ],
   "seen": {
@@ -52,6 +73,8 @@
     },
     "our-tampines-hub": {
       "1898c4616aa7497accb237c3": "2026-10-31",
+      "2714e073862c815b0c3511d5": "2026-11-07",
+      "3af88d6d3831ec810dbf3385": "2026-11-07",
       "4083546aa98105d5eebedfef": "2026-10-31",
       "5221c9b9e26fe71a49599554": "2026-10-31",
       "890bc79daa43e0f95a551e64": "2026-10-31",
