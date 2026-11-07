@@ -5,7 +5,24 @@ from datetime import date, timedelta
 from urllib.parse import quote
 from watchdog import ROOT, SGT, datetime, send_ntfy
 
+def monthly_cycle_start(task, today):
+    day = task["day_of_month"]
+    if not 1 <= day <= 28:
+        raise ValueError("Monthly day must be between 1 and 28")
+    start = date.fromisoformat(task["initial_due"])
+    candidate = date(today.year, today.month, day)
+    if candidate > today:
+        year, month = (today.year - 1, 12) if today.month == 1 else (today.year, today.month - 1)
+        candidate = date(year, month, day)
+    return candidate if candidate >= start else None
+
+def monthly_cycle_done(task, today):
+    cycle = monthly_cycle_start(task, today)
+    return cycle is not None and cycle.isoformat() in task.get("completed_cycles", [])
+
 def due_date(task):
+    if task.get("kind") == "monthly_day":
+        return date.fromisoformat(task["initial_due"])
     if task.get("kind") == "daily":
         return date.fromisoformat(task["initial_due"])
     if task.get("kind") == "one_off":
@@ -18,6 +35,11 @@ def due_tasks(data, notified, today):
     result = []
     for task in data["tasks"]:
         if not task.get("enabled", True) or due_date(task) > today:
+            continue
+        if task.get("kind") == "monthly_day":
+            if monthly_cycle_start(task, today) is None or monthly_cycle_done(task, today):
+                continue
+            result.append(task)
             continue
         if task.get("kind") == "one_off":
             # One-off alerts are valid only on the specified day and never nag later.
@@ -51,6 +73,8 @@ def run_maintenance(dry_run=False):
         if not base.startswith("https://"):
             raise ValueError("FEEDBACK_BASE_URL required for Done buttons")
         link = base + "/maintenance/done?task=" + quote(task["id"], safe="")
+        if task.get("kind") == "monthly_day":
+            link += "&cycle=" + monthly_cycle_start(task, today).isoformat()
         if task.get("kind") == "one_off":
             from urllib.request import Request, urlopen
             from urllib.parse import quote as urlquote
@@ -64,7 +88,7 @@ def run_maintenance(dry_run=False):
             notified[task["id"]] = "sent"
             continue
         watch = {"name": "Meow reminders"}
-        item = {"title": task["name"] + " — due" + (" (overdue)" if due_date(task) < today else ""), "link": link}
+        item = {"title": task["name"] + " — due" + (" (overdue)" if task.get("kind") != "monthly_day" and due_date(task) < today else ""), "link": link}
         send_ntfy(os.environ["NTFY_TOPIC"], watch, item, link, action_label="Done")
         notified[task["id"]] = task.get("last_done") or "initial"
     if not dry_run:
