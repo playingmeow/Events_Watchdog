@@ -111,13 +111,13 @@
     },
     {
       "id": "chatgpt-thread-handover",
-      "name": "Fortnightly ChatGPT thread handovers + monthly data export check",
+      "name": "Fortnightly ChatGPT chat refresh and verified thread handovers",
       "kind": "interval",
       "interval_days": 14,
-      "initial_due": "2026-11-15",
+      "initial_due": "2026-11-09",
       "nag_daily": true,
       "enabled": true,
-      "note": "Every 14 days from completion: review ALL active ChatGPT threads individually while still accessible; prepare verified handover summaries of decisions, corrections, rejected options, current status, outstanding work, files and links; move long threads into fresh conversations before context limits. Also check whether the monthly account-wide ChatGPT data export has been requested/downloaded; request it manually through ChatGPT export controls when due (the watchdog cannot export automatically). Verify summaries before retiring old threads. ChatGPT cannot assume access to every conversation. Keep the separate 7 Jan 2027 post-trip catch-up reminder. Tap Done after each review."
+      "note": "Every 14 days after Done, starting 9 Nov 2026: review ALL active ChatGPT conversations individually before they approach the conversation length limit. For each thread, capture and verify key decisions, corrections, rejected options, current status, outstanding work, relevant files and links; transfer into a fresh replacement conversation, check continuity, then delete the old thread only after nothing important is lost. Keep the number of active and archived threads minimal. Also check whether the monthly account-wide ChatGPT data export has been requested/downloaded; request manually through ChatGPT export controls when due (watchdog cannot export automatically). ChatGPT cannot assume access to every conversation. Keep the separate 7 Jan 2027 post-trip catch-up reminder. Tap Done after each review; daily nags continue until Done, then next reminder is 14 days after Done."
     },
     {
       "id": "chatgpt-handover-jan7",
