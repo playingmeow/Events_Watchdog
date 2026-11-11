@@ -57,6 +57,35 @@ def due_tasks(data, notified, today):
             result.append(task)
     return result
 
+def send_dashboard_notice(title, message, dashboard_url):
+    from urllib.request import Request, urlopen
+    from urllib.parse import quote as urlquote
+    server = (os.getenv("NTFY_SERVER") or "https://ntfy.sh").rstrip("/")
+    headers = {"Title": title.replace("—", "-").replace("–", "-"), "Tags": "calendar", "Content-Type": "text/plain; charset=utf-8", "Click": dashboard_url}
+    if os.getenv("NTFY_TOKEN"):
+        headers["Authorization"] = "Bearer " + os.environ["NTFY_TOKEN"]
+    req = Request(server + "/" + urlquote(os.environ["NTFY_TOPIC"], safe=""), data=message.encode("utf-8"), headers=headers, method="POST")
+    with urlopen(req, timeout=12) as resp:
+        resp.read()
+
+def send_weekly_dashboard(today, notified, dry_run):
+    key = "weekly-dashboard-review"
+    if today.weekday() != 6 or notified.get(key) == today.isoformat():
+        return
+    if dry_run:
+        print("[DRY RUN] Weekly dashboard review link")
+        return
+    base = os.getenv("FEEDBACK_BASE_URL", "").rstrip("/")
+    if not base.startswith("https://"):
+        raise ValueError("FEEDBACK_BASE_URL required for weekly dashboard link")
+    dashboard_url = base + "/dashboard"
+    send_dashboard_notice(
+        "Sunday dashboard review",
+        "Review your reminders and overdue items. Add anything you want to track for the week ahead.\n\n" + dashboard_url,
+        dashboard_url,
+    )
+    notified[key] = today.isoformat()
+
 def run_maintenance(dry_run=False):
     data = json.loads((ROOT / "maintenance.json").read_text())
     state_path = ROOT / "state.json"
@@ -76,21 +105,14 @@ def run_maintenance(dry_run=False):
         if task.get("kind") == "monthly_day":
             link += "&cycle=" + monthly_cycle_start(task, today).isoformat()
         if task.get("kind") == "one_off":
-            from urllib.request import Request, urlopen
-            from urllib.parse import quote as urlquote
-            server = (os.getenv("NTFY_SERVER") or "https://ntfy.sh").rstrip("/")
-            headers = {"Title": task["name"].replace("—", "-").replace("–", "-"), "Tags": "calendar", "Content-Type": "text/plain; charset=utf-8", "Click": base + "/dashboard"}
-            if os.getenv("NTFY_TOKEN"):
-                headers["Authorization"] = "Bearer " + os.environ["NTFY_TOKEN"]
-            req = Request(server + "/" + urlquote(os.environ["NTFY_TOPIC"], safe=""), data=task["message"].encode("utf-8"), headers=headers, method="POST")
-            with urlopen(req, timeout=12) as resp:
-                resp.read()
+            send_dashboard_notice(task["name"], task["message"], base + "/dashboard")
             notified[task["id"]] = "sent"
             continue
         watch = {"name": "Meow reminders"}
         item = {"title": task["name"] + " — due" + (" (overdue)" if task.get("kind") != "monthly_day" and due_date(task) < today else ""), "link": link}
         send_ntfy(os.environ["NTFY_TOPIC"], watch, item, link, action_label="Done")
         notified[task["id"]] = task.get("last_done") or "initial"
+    send_weekly_dashboard(today, notified, dry_run)
     if not dry_run:
         state_path.write_text(json.dumps(state, indent=2, sort_keys=True) + "\n")
 
