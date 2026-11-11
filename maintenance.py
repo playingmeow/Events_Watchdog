@@ -70,7 +70,8 @@ def send_dashboard_notice(title, message, dashboard_url):
 
 def send_weekly_dashboard(today, notified, dry_run):
     key = "weekly-dashboard-review"
-    if today.weekday() != 6 or notified.get(key) == today.isoformat():
+    test_run = today == date(2026, 11, 12)
+    if (today.weekday() != 6 and not test_run) or notified.get(key) == today.isoformat():
         return
     if dry_run:
         print("[DRY RUN] Weekly dashboard review link")
@@ -80,7 +81,7 @@ def send_weekly_dashboard(today, notified, dry_run):
         raise ValueError("FEEDBACK_BASE_URL required for weekly dashboard link")
     dashboard_url = base + "/dashboard"
     send_dashboard_notice(
-        "Sunday dashboard review",
+        "Dashboard review test" if test_run else "Sunday dashboard review",
         "Review your reminders and overdue items. Add anything you want to track for the week ahead.\n\n" + dashboard_url,
         dashboard_url,
     )
