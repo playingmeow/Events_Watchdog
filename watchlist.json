@@ -140,6 +140,35 @@
         "price"
       ],
       "note": "RMB 1200 is a projected voucher-adjusted target, not an observed checkout price. RSS only detects public mentions, not live Taobao prices or account-specific coupons."
+    },
+    {
+      "id": "mr-bean-voucher-pack",
+      "type": "promotion",
+      "name": "Mr Bean Singapore Voucher Pack",
+      "keywords": [
+        "mr bean"
+      ],
+      "priority_months": [
+        10,
+        11
+      ],
+      "enabled": true,
+      "sources": [
+        {
+          "type": "google_news_rss",
+          "query": "\"Mr Bean\" (\"coupon booklet\" OR \"voucher booklet\" OR \"voucher pack\" OR \"coupon book\") Singapore"
+        },
+        {
+          "type": "bing_news_rss",
+          "query": "\"Mr Bean\" Singapore (\"coupon booklet\" OR \"voucher booklet\" OR \"voucher pack\")"
+        }
+      ],
+      "deal_words": [
+        "coupon booklet",
+        "voucher booklet",
+        "voucher pack",
+        "coupon book"
+      ]
     }
   ]
 }
