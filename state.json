@@ -18,7 +18,8 @@
     "sq-time-to-fly",
     "heartbeat-bedok",
     "our-tampines-hub",
-    "bigme-b751cs-1111"
+    "bigme-b751cs-1111",
+    "mr-bean-voucher-pack"
   ],
   "maintenance_notified": {
     "chatgpt-thread-handover": "initial",
@@ -28,7 +29,8 @@
     "pantry-snooze-test": "initial",
     "princess-antiflea": "initial",
     "review-kiv-opportunities": "initial",
-    "toto-missed-system7-4232": "initial"
+    "toto-missed-system7-4232": "initial",
+    "weekly-dashboard-review": "2026-11-12"
   },
   "oth_history": [
     {
@@ -74,6 +76,7 @@
       "1b45aac21fa551595144ed80": "2026-10-31",
       "eba70a9b1cb12e78a65e1b9e": "2026-10-31"
     },
+    "mr-bean-voucher-pack": {},
     "our-tampines-hub": {
       "1898c4616aa7497accb237c3": "2026-10-31",
       "2714e073862c815b0c3511d5": "2026-11-07",
