@@ -21,7 +21,7 @@
       "id": "dust-bag",
       "name": "Inspect self-empty station dust bag",
       "interval_days": 60,
-      "initial_due": "2026-12-25",
+      "initial_due": "2026-12-23",
       "note": "Next inspection moved forward before travel. Previous schedule anchor was 2026-10-31.",
       "nag_daily": true
     },
