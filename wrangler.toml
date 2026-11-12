@@ -1,0 +1,7 @@
+name = "eventswatchdog"
+main = "cloudflare/feedback-worker.js"
+compatibility_date = "2026-10-31"
+keep_vars = true
+
+[observability.logs]
+enabled = true
