@@ -33,6 +33,10 @@ function awayPreview(today) {
     <label>From <input type="datetime-local" id="away-start"></label>
     <label>Until <input type="datetime-local" id="away-end"></label>
     <button type="button" id="test-away" data-day="${tomorrow}">Test with tomorrow</button>
+    <details><summary>Add a second trip</summary>
+      <label>From <input type="datetime-local" id="away-start-2"></label>
+      <label>Until <input type="datetime-local" id="away-end-2"></label>
+    </details>
     <p id="away-result" role="status"></p></section>
     <style>.trip-clash{color:#a41123;font-weight:bold}</style>
     <script>
@@ -41,13 +45,16 @@ function awayPreview(today) {
         const end = document.getElementById("away-end");
         const result = document.getElementById("away-result");
         const test = document.getElementById("test-away");
+        const inputs = [[start, end], [document.getElementById("away-start-2"), document.getElementById("away-end-2")]];
         let sample;
         function highlight() {
-          const valid = start.value && end.value && start.value < end.value;
+          const ranges = inputs.map(([from, to]) => [from.value, to.value]);
+          const valid = ranges.filter(([from, to]) => from && to && from < to);
+          const invalid = ranges.some(([from, to]) => from && to && from >= to);
           let count = 0;
           for (const row of document.querySelectorAll("[data-home-alert]")) {
             const alert = row.dataset.homeAlert;
-            const clash = Boolean(valid && alert && start.value <= alert && alert < end.value);
+            const clash = Boolean(alert && valid.some(([from, to]) => from <= alert && alert < to));
             const cell = row.cells[1];
             cell.classList.toggle("trip-clash", clash);
             cell.querySelector(".trip-label")?.remove();
@@ -59,16 +66,15 @@ function awayPreview(today) {
               count++;
             }
           }
-          result.textContent = valid ? count + " home-only reminder(s) overlap." :
-            (start.value && end.value ? "The end must be after the start." : "");
+          result.textContent = (valid.length ? count + " home-only reminder(s) overlap. " : "") +
+            (invalid ? "Each trip must end after it starts." : "");
         }
         function update() {
           sample?.remove();
           sample = undefined;
           highlight();
         }
-        start.addEventListener("input", update);
-        end.addEventListener("input", update);
+        for (const input of inputs.flat()) input.addEventListener("input", update);
         test.addEventListener("click", () => {
           const day = test.dataset.day;
           start.value = day + "T00:00";
