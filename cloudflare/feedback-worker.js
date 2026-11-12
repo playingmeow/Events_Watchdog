@@ -37,7 +37,9 @@ async function dashboard(env) {
   const days = (a,b) => Math.round((Date.parse(a+"T00:00:00Z")-Date.parse(b+"T00:00:00Z"))/86400000);
   const rows = data.tasks.filter(t=>t.enabled!==false).map(t=>{
     let due,summary;
+    let frequency = t.interval_days ? `Every ${t.interval_days} ${t.interval_days === 1 ? "day" : "days"}` : "Once";
     if(t.kind==="daily"){
+      frequency="Daily";
       due=t.initial_due;
       const elapsed=Math.max(0,days(today,due)+1);
       const taken=(t.completed_dates||[]).filter(d=>d>=due&&d<=today).length;
@@ -45,13 +47,14 @@ async function dashboard(env) {
       due=today;
     }else if(t.kind==="monthly_day"){
       const day=t.day_of_month;
+      frequency="Monthly (day "+day+")";
       const current=today.slice(0,8)+String(day).padStart(2,"0");
       const prev=new Date(Date.parse(today.slice(0,8)+"01T00:00:00Z"));
       prev.setUTCMonth(prev.getUTCMonth()-1);
       const previous=prev.toISOString().slice(0,8)+String(day).padStart(2,"0");
       const cycle=current<=today?current:previous;
       due=cycle<t.initial_due?t.initial_due:cycle;
-      summary="Monthly on day "+day+"; completed cycles: "+(t.completed_cycles||[]).length;
+      summary="Completed cycles: "+(t.completed_cycles||[]).length;
       if(cycle>=t.initial_due && (t.completed_cycles||[]).includes(cycle)) summary+="; current cycle done";
     }else{
       due=t.last_done&&t.interval_days ? new Date(Date.parse(t.last_done+"T00:00:00Z")+t.interval_days*86400000).toISOString().slice(0,10) : t.initial_due;
@@ -60,9 +63,9 @@ async function dashboard(env) {
     }
     const monthlyDone=t.kind==="monthly_day" && (t.completed_cycles||[]).includes(due);
     const status=monthlyDone ? "Done this cycle" : t.kind==="daily" && today<t.initial_due ? "Starts "+t.initial_due : t.kind==="daily"&&(t.completed_dates||[]).includes(today) ? "Done today" : due<=today ? "Due / overdue" : "Next "+due;
-    return "<tr><td>"+esc(t.name)+"</td><td>"+esc(status)+"</td><td>"+esc(summary)+"</td></tr>";
+    return "<tr><td>"+esc(t.name)+"</td><td>"+esc(status)+"</td><td>"+esc(frequency)+"</td><td>"+esc(summary)+"</td></tr>";
   }).join("");
-  return response('<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><title>Meow Accountability</title><style>body{font:16px system-ui;max-width:850px;margin:32px auto;padding:0 16px}table{border-collapse:collapse;width:100%}td,th{padding:12px;border-bottom:1px solid #ddd;text-align:left}</style><h1>Meow Accountability</h1><p>Today: '+today+'</p><table><tr><th>Task</th><th>Status</th><th>History</th></tr>'+rows+'</table><p><small>Daily completion is counted only when Done is tapped; it does not prove consumption.</small></p>');
+  return response('<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><title>Meow Accountability</title><style>body{font:16px system-ui;max-width:850px;margin:32px auto;padding:0 16px}table{border-collapse:collapse;width:100%}td,th{padding:12px;border-bottom:1px solid #ddd;text-align:left}</style><h1>Meow Accountability</h1><p>Today: '+today+'</p><table><tr><th>Task</th><th>Status</th><th>Frequency</th><th>History</th></tr>'+rows+'</table><p><small>Daily completion is counted only when Done is tapped; it does not prove consumption.</small></p>');
 }
 
 async function maintenanceDone(request, env, url) {
