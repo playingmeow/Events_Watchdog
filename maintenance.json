@@ -63,7 +63,8 @@
       "kind": "daily",
       "initial_due": "2026-11-02",
       "completed_dates": [
-        "2026-11-05"
+        "2026-11-05",
+        "2026-11-12"
       ],
       "nag_daily": true,
       "enabled": true
