@@ -34,6 +34,9 @@ def due_date(task):
 def due_tasks(data, notified, today):
     result = []
     for task in data["tasks"]:
+        expires_after = task.get("expires_after")
+        if expires_after and today > date.fromisoformat(expires_after):
+            continue
         if not task.get("enabled", True) or due_date(task) > today:
             continue
         if task.get("kind") == "monthly_day":
