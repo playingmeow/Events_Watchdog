@@ -37,6 +37,7 @@ function awayPreview(today) {
       <label>From <input type="datetime-local" id="away-start-2"></label>
       <label>Until <input type="datetime-local" id="away-end-2"></label>
     </details>
+    <button type="button" id="save-trips">Save trips</button>
     <p id="away-result" role="status"></p></section>
     <style>.trip-clash{color:#a41123;font-weight:bold}</style>
     <script>
@@ -46,9 +47,10 @@ function awayPreview(today) {
         const result = document.getElementById("away-result");
         const test = document.getElementById("test-away");
         const inputs = [[start, end], [document.getElementById("away-start-2"), document.getElementById("away-end-2")]];
+        const storageKey = "meow-away-trips";
+        const rangesFromInputs = () => inputs.map(([from, to]) => [from.value, to.value]);
         let sample;
-        function highlight() {
-          const ranges = inputs.map(([from, to]) => [from.value, to.value]);
+        function highlight(ranges = rangesFromInputs()) {
           const valid = ranges.filter(([from, to]) => from && to && from < to);
           const invalid = ranges.some(([from, to]) => from && to && from >= to);
           let count = 0;
@@ -75,17 +77,42 @@ function awayPreview(today) {
           highlight();
         }
         for (const input of inputs.flat()) input.addEventListener("input", update);
+        try {
+          const saved = JSON.parse(localStorage.getItem(storageKey) || "[]");
+          inputs.forEach(([from, to], index) => {
+            if (Array.isArray(saved[index])) {
+              [from.value, to.value] = saved[index];
+              if (index === 1 && from.value && to.value) from.closest("details").open = true;
+            }
+          });
+        } catch {
+          // The preview remains usable when browser storage is unavailable.
+        }
+        highlight();
+        document.getElementById("save-trips").addEventListener("click", () => {
+          const ranges = rangesFromInputs();
+          if (ranges.some(([from, to]) => (from || to) && (!from || !to || from >= to))) {
+            result.textContent = "Enter a start and a later end for each trip you want to save.";
+            return;
+          }
+          try {
+            localStorage.setItem(storageKey, JSON.stringify(ranges));
+            update();
+            result.textContent += " Trips saved in this browser.";
+          } catch {
+            result.textContent = "This browser could not save the trip dates.";
+          }
+        });
         test.addEventListener("click", () => {
           const day = test.dataset.day;
-          start.value = day + "T00:00";
-          end.value = day + "T23:59";
           sample?.remove();
           sample = document.querySelector("table").insertRow(1);
           sample.dataset.homeAlert = day + "T09:30";
           for (const value of ["Sample robot roller check", "Next " + day + " at 9:30 AM", "Test only", ""]) {
             sample.insertCell().textContent = value;
           }
-          highlight();
+          highlight([[day + "T00:00", day + "T23:59"]]);
+          result.textContent = "Sample preview for tomorrow. " + result.textContent;
         });
       });
     </script>`;
