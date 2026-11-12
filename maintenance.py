@@ -90,13 +90,17 @@ def send_weekly_dashboard(today, notified, dry_run):
     )
     notified[key] = today.isoformat()
 
-def run_maintenance(dry_run=False):
+def run_maintenance(dry_run=False, evening=False):
     data = json.loads((ROOT / "maintenance.json").read_text())
     state_path = ROOT / "state.json"
     state = json.loads(state_path.read_text())
     notified = state.setdefault("maintenance_notified", {})
     today = datetime.now(SGT).date()
     tasks = due_tasks(data, notified, today)
+    evening_sent = state.setdefault("maintenance_evening_sent", {}) if evening else {}
+    if evening:
+        tasks = [task for task in tasks if task.get("evening_followup")
+                 and evening_sent.get(task["id"]) != today.isoformat()]
     print(f"[TASKS] due={len(tasks)}")
     for task in tasks:
         if dry_run:
@@ -115,8 +119,12 @@ def run_maintenance(dry_run=False):
         watch = {"name": "Meow reminders"}
         item = {"title": task["name"] + " — due" + (" (overdue)" if task.get("kind") != "monthly_day" and due_date(task) < today else ""), "link": link}
         send_ntfy(os.environ["NTFY_TOPIC"], watch, item, link, action_label="Done")
-        notified[task["id"]] = task.get("last_done") or "initial"
-    send_weekly_dashboard(today, notified, dry_run)
+        if evening:
+            evening_sent[task["id"]] = today.isoformat()
+        else:
+            notified[task["id"]] = task.get("last_done") or "initial"
+    if not evening:
+        send_weekly_dashboard(today, notified, dry_run)
     if not dry_run:
         state_path.write_text(json.dumps(state, indent=2, sort_keys=True) + "\n")
 
@@ -124,7 +132,8 @@ if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--evening", action="store_true")
     args = parser.parse_args()
     if not args.dry_run and not os.getenv("NTFY_TOPIC"):
         raise SystemExit("NTFY_TOPIC required")
-    run_maintenance(args.dry_run)
+    run_maintenance(args.dry_run, args.evening)
