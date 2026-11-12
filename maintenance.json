@@ -274,6 +274,26 @@
       "nag_daily": true,
       "enabled": true,
       "note": "Pay monthly town council service and conservancy charges via AXS. Confirm payment is successful, then tap Done to stop daily nags until next month's 5th."
+    },
+    {
+      "id": "shopee-soup-spoon-pumpkin",
+      "name": "Redeem Shopee Soup Spoon pumpkin set on A30 phone (expires 30 Nov)",
+      "kind": "interval",
+      "interval_days": 30,
+      "initial_due": "2026-11-13",
+      "expires_after": "2026-11-30",
+      "nag_daily": true,
+      "enabled": true,
+      "note": "Tap Done after redeeming to stop daily reminders."
+    },
+    {
+      "id": "shopee-soup-spoon-pumpkin-expired",
+      "name": "Shopee Soup Spoon pumpkin set - voucher expired",
+      "kind": "one_off",
+      "initial_due": "2026-12-01",
+      "expires_after": "2026-12-01",
+      "enabled": true,
+      "message": "The Shopee Soup Spoon pumpkin set voucher on the A30 phone expired on 30 November."
     }
   ]
 }
