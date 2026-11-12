@@ -26,13 +26,11 @@ async function github(env, method, body, sha) {
   return r.json();
 }
 
-function awayPreview(today) {
-  const tomorrow = new Date(Date.parse(today + "T00:00:00Z") + 86400000).toISOString().slice(0,10);
+function awayPreview() {
   return `<section><h2>Away-period preview</h2>
     <p>Enter the padded start and end in Singapore time. This preview only highlights clashes.</p>
     <label>From <input type="datetime-local" id="away-start"></label>
     <label>Until <input type="datetime-local" id="away-end"></label>
-    <button type="button" id="test-away" data-day="${tomorrow}">Test with tomorrow</button>
     <details><summary>Add a second trip</summary>
       <label>From <input type="datetime-local" id="away-start-2"></label>
       <label>Until <input type="datetime-local" id="away-end-2"></label>
@@ -45,11 +43,9 @@ function awayPreview(today) {
         const start = document.getElementById("away-start");
         const end = document.getElementById("away-end");
         const result = document.getElementById("away-result");
-        const test = document.getElementById("test-away");
         const inputs = [[start, end], [document.getElementById("away-start-2"), document.getElementById("away-end-2")]];
         const storageKey = "meow-away-trips";
         const rangesFromInputs = () => inputs.map(([from, to]) => [from.value, to.value]);
-        let sample;
         function highlight(ranges = rangesFromInputs()) {
           const valid = ranges.filter(([from, to]) => from && to && from < to);
           const invalid = ranges.some(([from, to]) => from && to && from >= to);
@@ -71,12 +67,7 @@ function awayPreview(today) {
           result.textContent = (valid.length ? count + " home-only reminder(s) overlap. " : "") +
             (invalid ? "Each trip must end after it starts." : "");
         }
-        function update() {
-          sample?.remove();
-          sample = undefined;
-          highlight();
-        }
-        for (const input of inputs.flat()) input.addEventListener("input", update);
+        for (const input of inputs.flat()) input.addEventListener("input", () => highlight());
         try {
           const saved = JSON.parse(localStorage.getItem(storageKey) || "[]");
           inputs.forEach(([from, to], index) => {
@@ -97,22 +88,11 @@ function awayPreview(today) {
           }
           try {
             localStorage.setItem(storageKey, JSON.stringify(ranges));
-            update();
+            highlight();
             result.textContent += " Trips saved in this browser.";
           } catch {
             result.textContent = "This browser could not save the trip dates.";
           }
-        });
-        test.addEventListener("click", () => {
-          const day = test.dataset.day;
-          sample?.remove();
-          sample = document.querySelector("table").insertRow(1);
-          sample.dataset.homeAlert = day + "T09:30";
-          for (const value of ["Sample robot roller check", "Next " + day + " at 9:30 AM", "Test only", ""]) {
-            sample.insertCell().textContent = value;
-          }
-          highlight([[day + "T00:00", day + "T23:59"]]);
-          result.textContent = "Sample preview for tomorrow. " + result.textContent;
         });
       });
     </script>`;
@@ -161,7 +141,7 @@ async function dashboard(env) {
     const alert = homeOnly && /^\d{4}-\d{2}-\d{2}$/.test(alertDate) ? alertDate + "T09:30" : "";
     return '<tr data-home-alert="'+alert+'"><td>'+esc(t.name)+'</td><td>'+esc(status)+"</td><td>"+esc(frequency)+"</td><td>"+esc(summary)+"</td></tr>";
   }).join("");
-  return response('<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><title>Meow Accountability</title><style>body{font:16px system-ui;max-width:850px;margin:32px auto;padding:0 16px}table{border-collapse:collapse;width:100%}td,th{padding:12px;border-bottom:1px solid #ddd;text-align:left}</style><h1>Meow Accountability</h1><p>Today: '+today+'</p>'+awayPreview(today)+'<table><tr><th>Task</th><th>Status</th><th>Frequency</th><th>History</th></tr>'+rows+'</table><p><small>Daily completion is counted only when Done is tapped; it does not prove consumption.</small></p>');
+  return response('<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><title>Meow Accountability</title><style>body{font:16px system-ui;max-width:850px;margin:32px auto;padding:0 16px}table{border-collapse:collapse;width:100%}td,th{padding:12px;border-bottom:1px solid #ddd;text-align:left}</style><h1>Meow Accountability</h1><p>Today: '+today+'</p>'+awayPreview()+'<table><tr><th>Task</th><th>Status</th><th>Frequency</th><th>History</th></tr>'+rows+'</table><p><small>Daily completion is counted only when Done is tapped; it does not prove consumption.</small></p>');
 }
 
 async function maintenanceDone(request, env, url) {
