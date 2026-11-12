@@ -26,6 +26,65 @@ async function github(env, method, body, sha) {
   return r.json();
 }
 
+function awayPreview(today) {
+  const tomorrow = new Date(Date.parse(today + "T00:00:00Z") + 86400000).toISOString().slice(0,10);
+  return `<section><h2>Away-period preview</h2>
+    <p>Enter the padded start and end in Singapore time. This preview only highlights clashes.</p>
+    <label>From <input type="datetime-local" id="away-start"></label>
+    <label>Until <input type="datetime-local" id="away-end"></label>
+    <button type="button" id="test-away" data-day="${tomorrow}">Test with tomorrow</button>
+    <p id="away-result" role="status"></p></section>
+    <style>.trip-clash{color:#a41123;font-weight:bold}</style>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const start = document.getElementById("away-start");
+        const end = document.getElementById("away-end");
+        const result = document.getElementById("away-result");
+        const test = document.getElementById("test-away");
+        let sample;
+        function highlight() {
+          const valid = start.value && end.value && start.value < end.value;
+          let count = 0;
+          for (const row of document.querySelectorAll("[data-home-alert]")) {
+            const alert = row.dataset.homeAlert;
+            const clash = Boolean(valid && alert && start.value <= alert && alert < end.value);
+            const cell = row.cells[1];
+            cell.classList.toggle("trip-clash", clash);
+            cell.querySelector(".trip-label")?.remove();
+            if (clash) {
+              const label = document.createElement("span");
+              label.className = "trip-label";
+              label.textContent = " · Overlaps trip";
+              cell.append(label);
+              count++;
+            }
+          }
+          result.textContent = valid ? count + " home-only reminder(s) overlap." :
+            (start.value && end.value ? "The end must be after the start." : "");
+        }
+        function update() {
+          sample?.remove();
+          sample = undefined;
+          highlight();
+        }
+        start.addEventListener("input", update);
+        end.addEventListener("input", update);
+        test.addEventListener("click", () => {
+          const day = test.dataset.day;
+          start.value = day + "T00:00";
+          end.value = day + "T23:59";
+          sample?.remove();
+          sample = document.querySelector("table").insertRow(1);
+          sample.dataset.homeAlert = day + "T09:30";
+          for (const value of ["Sample robot roller check", "Next " + day + " at 9:30 AM", "Test only", ""]) {
+            sample.insertCell().textContent = value;
+          }
+          highlight();
+        });
+      });
+    </script>`;
+}
+
 async function dashboard(env) {
   const api = "https://api.github.com/repos/" + REPO + "/contents/maintenance.json";
   const r = await fetch(api, {headers:{authorization:"Bearer "+env.GITHUB_TOKEN,accept:"application/vnd.github+json","user-agent":"Meow-Dashboard"}});
@@ -63,9 +122,13 @@ async function dashboard(env) {
     }
     const monthlyDone=t.kind==="monthly_day" && (t.completed_cycles||[]).includes(due);
     const status=monthlyDone ? "Done this cycle" : t.kind==="daily" && today<t.initial_due ? "Starts "+t.initial_due : t.kind==="daily"&&(t.completed_dates||[]).includes(today) ? "Done today" : due<=today ? "Due / overdue" : "Next "+due;
-    return "<tr><td>"+esc(t.name)+"</td><td>"+esc(status)+"</td><td>"+esc(frequency)+"</td><td>"+esc(summary)+"</td></tr>";
+    const homeOnly = /^(princess-antiflea|honey-antiflea|dust-bag)$/.test(t.id) ||
+      /roller|hepa filter|fan cleaning|clean.*fan|clean sensors|brush wear/i.test(t.name);
+    const alertDate = due < today ? today : due;
+    const alert = homeOnly && /^\d{4}-\d{2}-\d{2}$/.test(alertDate) ? alertDate + "T09:30" : "";
+    return '<tr data-home-alert="'+alert+'"><td>'+esc(t.name)+'</td><td>'+esc(status)+"</td><td>"+esc(frequency)+"</td><td>"+esc(summary)+"</td></tr>";
   }).join("");
-  return response('<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><title>Meow Accountability</title><style>body{font:16px system-ui;max-width:850px;margin:32px auto;padding:0 16px}table{border-collapse:collapse;width:100%}td,th{padding:12px;border-bottom:1px solid #ddd;text-align:left}</style><h1>Meow Accountability</h1><p>Today: '+today+'</p><table><tr><th>Task</th><th>Status</th><th>Frequency</th><th>History</th></tr>'+rows+'</table><p><small>Daily completion is counted only when Done is tapped; it does not prove consumption.</small></p>');
+  return response('<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><title>Meow Accountability</title><style>body{font:16px system-ui;max-width:850px;margin:32px auto;padding:0 16px}table{border-collapse:collapse;width:100%}td,th{padding:12px;border-bottom:1px solid #ddd;text-align:left}</style><h1>Meow Accountability</h1><p>Today: '+today+'</p>'+awayPreview(today)+'<table><tr><th>Task</th><th>Status</th><th>Frequency</th><th>History</th></tr>'+rows+'</table><p><small>Daily completion is counted only when Done is tapped; it does not prove consumption.</small></p>');
 }
 
 async function maintenanceDone(request, env, url) {
