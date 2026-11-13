@@ -1,3 +1,18 @@
 {
-  "bookings": []
+  "bookings": [
+    {
+      "source": "SimplyBook",
+      "service": "Laser",
+      "date": "2026-11-19",
+      "time": "17:30",
+      "location": "TRL - Laser"
+    },
+    {
+      "source": "SimplyBook",
+      "service": "3D Printing",
+      "date": "2026-11-20",
+      "time": "15:00",
+      "location": "TRL - 3D Printing"
+    }
+  ]
 }
