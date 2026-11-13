@@ -4,6 +4,7 @@ import os
 from datetime import date, timedelta
 from urllib.parse import quote
 from watchdog import ROOT, SGT, datetime, send_ntfy
+from makeit_bookings import upcoming_bookings, format_bookings
 
 def monthly_cycle_start(task, today):
     day = task["day_of_month"]
@@ -124,6 +125,13 @@ def run_maintenance(dry_run=False, evening=False):
         else:
             notified[task["id"]] = task.get("last_done") or "initial"
     if not evening:
+        bookings = upcoming_bookings(today)
+        if bookings:
+            if dry_run:
+                print("[DRY RUN MAKEIT]", format_bookings(bookings))
+            else:
+                send_dashboard_notice("Upcoming MakeIT bookings", format_bookings(bookings),
+                                      os.getenv("FEEDBACK_BASE_URL", "https://ntfy.sh").rstrip("/") + "/dashboard")
         send_weekly_dashboard(today, notified, dry_run)
     if not dry_run:
         state_path.write_text(json.dumps(state, indent=2, sort_keys=True) + "\n")
