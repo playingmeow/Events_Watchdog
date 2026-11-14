@@ -1,6 +1,11 @@
 {
   "event_catalog": {
     "our-tampines-hub": {
+      "0980fa5c24434d897f66e448": {
+        "date": "2026-11-14",
+        "story_key": "url:https://t.me/OTHsports/622",
+        "text": "\ud83c\udf84 Get Ready to Jingle, Sweat & Shine! The Ultimate Christmas Dance Party is Here! \ud83c\udf1f Shed the holiday stress and turn up the heat with us at Our Tampines Hub! We are thrilled to welcome Taiwan\u2019s powerhouse Zumba presenter, Abaw Hsu, back for an explosive end-of-year dance celebration! He\u2019ll be taking over the stage alongside our phenomenal dynamic lineup of instructors\u2014David, Ralph, Alva, Pinky, and Zainul\u2014bringing you two hours of non-stop beats, infectious rhythms, and high-octane energy! Whether you're a seasoned dancer or just looking to party it out with the community, come ready to move, smile, and sweat. * Date: 19 December * Time: 4:00 PM \u2013 6:00 PM * Venue: Festive Plaza @ OTH \ud83c\udf9f\ufe0f Tickets: $15 each: - https://www.onepa.gov.sg/events/tampines-west-csn-christmas-dance-party-19-december-2026-e69021787 Grab your workout buddies, put on your festive fitness gear, and let\u2019s wrap up the year with an unforgettable dance celebration! Proudly brought to you by Our Tampines Hub & Tampines West CSN."
+      },
       "2714e073862c815b0c3511d5": {
         "date": "2026-11-07",
         "story_key": "url:https://t.me/OTHsports/619",
@@ -10,6 +15,11 @@
         "date": "2026-11-07",
         "story_key": "url:https://t.me/OTHsports/620",
         "text": "Attention Tampines residents and hub visitors! No exercise sessions at OTH Gate 1 on 8 November 2026 due to Public Holiday. Wishing all happy holidays."
+      },
+      "ccbb78292456240cba50604e": {
+        "date": "2026-11-14",
+        "story_key": "url:https://t.me/OTHsports/621",
+        "text": "\ud83d\udd25 READY TO MOVE, GROOVE, AND CONNECT? \ud83d\udd25 Join us for an exciting community street dance session led by renowned instructor Ye Zheng (\u53f6\u6b63) from China! Whether you're a seasoned dancer or just looking to pick up some new moves, come be part of \"Street Wall: One Beat, One Community\" as we introduce and promote street dance right here in the heart of our neighborhood! *Date: 12 December 2026 *Time: 1 PM \u2013 3 PM * Location: Our Tampines Hub, Community Auditorium (Level 3) \ud83c\udf9f\ufe0f Admission: FREE, but registration is required to secure your spot! Spaces are limited, so grab your friends and sign up today to catch the rhythm! Register here - https://go.gov.sg/streetwall12122026 or scan the QR Code Proudly brought to you by Our Tampines Hub & Tampines West CSN."
       }
     }
   },
@@ -70,6 +80,14 @@
     {
       "date": "2026-11-07",
       "text": "Attention Tampines residents and hub visitors! No exercise sessions at OTH Gate 1 on 8 November 2026 due to Public Holiday. Wishing all happy holidays."
+    },
+    {
+      "date": "2026-11-14",
+      "text": "\ud83d\udd25 READY TO MOVE, GROOVE, AND CONNECT? \ud83d\udd25 Join us for an exciting community street dance session led by renowned instructor Ye Zheng (\u53f6\u6b63) from China! Whether you're a seasoned dancer or just looking to pick up some new moves, come be part of \"Street Wall: One Beat, One Community\" as we introduce and promote street dance right here in the heart of our neighborhood! *Date: 12 December 2026 *Time: 1 PM \u2013 3 PM * Location: Our Tampines Hub, Community Auditorium (Level 3) \ud83c\udf9f\ufe0f Admission: FREE, but registration is required to secure your spot! Spaces are limited, so grab your friends and sign up today to catch the rhythm! Register here - https://go.gov.sg/streetwall12122026 or scan the QR Code Proudly brought to you by Our Tampines Hub & Tampines West CSN."
+    },
+    {
+      "date": "2026-11-14",
+      "text": "\ud83c\udf84 Get Ready to Jingle, Sweat & Shine! The Ultimate Christmas Dance Party is Here! \ud83c\udf1f Shed the holiday stress and turn up the heat with us at Our Tampines Hub! We are thrilled to welcome Taiwan\u2019s powerhouse Zumba presenter, Abaw Hsu, back for an explosive end-of-year dance celebration! He\u2019ll be taking over the stage alongside our phenomenal dynamic lineup of instructors\u2014David, Ralph, Alva, Pinky, and Zainul\u2014bringing you two hours of non-stop beats, infectious rhythms, and high-octane energy! Whether you're a seasoned dancer or just looking to party it out with the community, come ready to move, smile, and sweat. * Date: 19 December * Time: 4:00 PM \u2013 6:00 PM * Venue: Festive Plaza @ OTH \ud83c\udf9f\ufe0f Tickets: $15 each: - https://www.onepa.gov.sg/events/tampines-west-csn-christmas-dance-party-19-december-2026-e69021787 Grab your workout buddies, put on your festive fitness gear, and let\u2019s wrap up the year with an unforgettable dance celebration! Proudly brought to you by Our Tampines Hub & Tampines West CSN."
     }
   ],
   "seen": {
@@ -80,6 +98,7 @@
     },
     "mr-bean-voucher-pack": {},
     "our-tampines-hub": {
+      "0980fa5c24434d897f66e448": "2026-11-14",
       "1898c4616aa7497accb237c3": "2026-10-31",
       "2714e073862c815b0c3511d5": "2026-11-07",
       "3af88d6d3831ec810dbf3385": "2026-11-07",
@@ -87,6 +106,7 @@
       "5221c9b9e26fe71a49599554": "2026-10-31",
       "890bc79daa43e0f95a551e64": "2026-10-31",
       "90a020a5c6aca8eac6ebe20c": "2026-10-31",
+      "ccbb78292456240cba50604e": "2026-11-14",
       "de8c1d3685651f6746ce23e3": "2026-10-31",
       "e543b7c6cc4a3265e4459550": "2026-10-31"
     },
