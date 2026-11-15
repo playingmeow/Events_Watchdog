@@ -1,5 +1,12 @@
 {
   "event_catalog": {
+    "heartbeat-bedok": {
+      "cdabb7d2deb7f5e6d288ef2f": {
+        "date": "2026-11-15",
+        "story_key": "url:https://t.me/Heartbeatbedok/607",
+        "text": "A mystery waiting to be uncovered. \ud83d\udd0d Join us for a screening of The Songbird's Secret, where young Lucie sets out to uncover the mysteries of her mother's past with the help of some unexpected companions. Part of vOilah! French Film Festival and presented in partnership with the Embassy of France in Singapore and Institut Fran\u00e7ais. \ud83d\udcc5 22 November 2026 \u23f0 3pm \ud83d\udccd Heartbeat@Bedok Atrium, Level 1 Voilah #HeartbeatAtBedok #APlaceToLearn #APlaceToPlay #APlaceForAll #EastSideBestSide #voilah #frenchfilmfestival #MovieScreening #CommunityEvents"
+      }
+    },
     "our-tampines-hub": {
       "0980fa5c24434d897f66e448": {
         "date": "2026-11-14",
@@ -42,7 +49,7 @@
     "review-kiv-opportunities": "initial",
     "shopee-soup-spoon-pumpkin": "initial",
     "toto-missed-system7-4232": "initial",
-    "weekly-dashboard-review": "2026-11-12"
+    "weekly-dashboard-review": "2026-11-15"
   },
   "oth_history": [
     {
@@ -94,6 +101,7 @@
     "bigme-b751cs-1111": {},
     "heartbeat-bedok": {
       "1b45aac21fa551595144ed80": "2026-10-31",
+      "cdabb7d2deb7f5e6d288ef2f": "2026-11-15",
       "eba70a9b1cb12e78a65e1b9e": "2026-10-31"
     },
     "mr-bean-voucher-pack": {},
