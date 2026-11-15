@@ -302,6 +302,16 @@
       "expires_after": "2026-12-01",
       "enabled": true,
       "message": "The Shopee Soup Spoon pumpkin set voucher on the A30 phone expired on 30 November."
+    },
+    {
+      "id": "change-toothbrush",
+      "name": "Change toothbrush",
+      "kind": "monthly_day",
+      "day_of_month": 17,
+      "initial_due": "2026-11-17",
+      "completed_cycles": [],
+      "nag_daily": true,
+      "enabled": true
     }
   ]
 }
