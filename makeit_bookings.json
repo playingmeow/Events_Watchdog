@@ -1,6 +1,20 @@
 {
   "bookings": [
     {
+      "source": "MakeIT Yourself",
+      "service": "3D Printer",
+      "date": "2026-11-19",
+      "time": "10:00",
+      "location": "Tampines"
+    },
+    {
+      "source": "MakeIT Yourself",
+      "service": "3D Printer",
+      "date": "2026-11-19",
+      "time": "12:00",
+      "location": "Tampines"
+    },
+    {
       "source": "SimplyBook",
       "service": "Laser",
       "date": "2026-11-19",
