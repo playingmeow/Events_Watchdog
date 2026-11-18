@@ -292,9 +292,18 @@
       "kind": "monthly_day",
       "day_of_month": 17,
       "initial_due": "2026-11-17",
-      "completed_cycles": [],
+      "completed_cycles": [
+        "2026-11-17"
+      ],
       "nag_daily": true,
-      "enabled": true
+      "enabled": true,
+      "history": [
+        {
+          "done": "2026-11-18",
+          "due": "2026-11-17",
+          "days_late": 1
+        }
+      ]
     }
   ]
 }
