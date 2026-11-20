@@ -1,30 +1,23 @@
 {
   "bookings": [
     {
-      "source": "MakeIT Yourself",
-      "service": "3D Printer",
-      "date": "2026-11-19",
-      "time": "10:00",
-      "location": "Tampines"
-    },
-    {
-      "source": "MakeIT Yourself",
-      "service": "3D Printer",
-      "date": "2026-11-19",
+      "source": "SimplyBook",
+      "service": "Laser",
+      "date": "2026-11-20",
       "time": "12:00",
-      "location": "Tampines"
+      "location": "TRL - Laser"
     },
     {
       "source": "SimplyBook",
       "service": "3D Printing",
-      "date": "2026-11-19",
-      "time": "12:00",
+      "date": "2026-11-26",
+      "time": "15:00",
       "location": "TRL - 3D Printing"
     },
     {
       "source": "SimplyBook",
       "service": "Laser",
-      "date": "2026-11-19",
+      "date": "2026-12-03",
       "time": "17:30",
       "location": "TRL - Laser"
     }
