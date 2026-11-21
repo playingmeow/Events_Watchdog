@@ -2,13 +2,6 @@
   "bookings": [
     {
       "source": "SimplyBook",
-      "service": "Laser",
-      "date": "2026-11-20",
-      "time": "12:00",
-      "location": "TRL - Laser"
-    },
-    {
-      "source": "SimplyBook",
       "service": "3D Printing",
       "date": "2026-11-26",
       "time": "15:00",
