@@ -36,7 +36,7 @@
       "id": "main-brush-clean",
       "name": "Clean main roller brush",
       "interval_days": 7,
-      "last_done": "2026-11-15",
+      "last_done": "2026-11-22",
       "nag_daily": true,
       "history": [
         {
@@ -52,6 +52,11 @@
         {
           "done": "2026-11-15",
           "due": "2026-11-17",
+          "days_late": 0
+        },
+        {
+          "done": "2026-11-22",
+          "due": "2026-11-22",
           "days_late": 0
         }
       ]
