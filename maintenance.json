@@ -65,8 +65,15 @@
       "id": "roller",
       "name": "Inspect main roller and side brushes for wear",
       "interval_days": 30,
-      "last_done": "2026-10-24",
-      "nag_daily": true
+      "last_done": "2026-11-24",
+      "nag_daily": true,
+      "history": [
+        {
+          "done": "2026-11-24",
+          "due": "2026-11-23",
+          "days_late": 1
+        }
+      ]
     },
     {
       "id": "human-vitamins",
