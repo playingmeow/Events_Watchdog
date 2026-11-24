@@ -296,7 +296,15 @@
       "expires_after": "2026-11-30",
       "nag_daily": true,
       "enabled": true,
-      "note": "Tap Done after redeeming to stop daily reminders."
+      "note": "Tap Done after redeeming to stop daily reminders.",
+      "history": [
+        {
+          "done": "2026-11-24",
+          "due": "2026-11-13",
+          "days_late": 11
+        }
+      ],
+      "last_done": "2026-11-24"
     },
     {
       "id": "shopee-soup-spoon-pumpkin-expired",
