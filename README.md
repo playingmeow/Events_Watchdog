@@ -48,5 +48,5 @@ You can generate it in Google's OAuth 2.0 Playground by selecting **Use your own
 
 **Google OAuth caveat:** Gmail's `gmail.readonly` scope is classified as restricted. For a one-person personal-use app, Google's verification guidance describes a personal-use exception, but consent may show an unverified-app warning. An external OAuth app left in **Testing** issues refresh tokens that expire after 7 days, so that mode is suitable only for a short trial. Confirm Google's current verification and data-handling requirements before publishing the app for ongoing use.
 
-Use **Actions → MakeIT booking sync → Run workflow** with `dry_run=true` to check the reconciliation before the first write. The daily schedule runs a live sync automatically once credentials are configured.
+After merging and adding the credentials, use **Actions → MakeIT booking sync → Run workflow** with `dry_run=true` to check the reconciliation before the first write. If the output matches, dispatch again with `dry_run=false`; the daily schedule then runs at its next 08:15 Singapore occurrence.
 \n
