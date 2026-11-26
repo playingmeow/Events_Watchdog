@@ -3,6 +3,13 @@
     {
       "source": "SimplyBook",
       "service": "3D Printing",
+      "date": "2026-11-26",
+      "time": "15:00",
+      "location": "TRL - 3D Printing"
+    },
+    {
+      "source": "SimplyBook",
+      "service": "3D Printing",
       "date": "2026-12-03",
       "time": "12:00",
       "location": "TRL - 3D Printing"
