@@ -24,7 +24,10 @@ def snapshot_is_fresh(path=PATH, now=None):
 
 
 def upcoming_bookings(today, days=7, path=PATH):
-    data = json.loads(Path(path).read_text(encoding="utf-8"))
+    try:
+        data = json.loads(Path(path).read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise StaleSnapshotError("snapshot is missing or invalid") from exc
     if not snapshot_is_fresh(path):
         raise StaleSnapshotError("snapshot missing a recent successful Gmail/Calendar sync")
     end = today + timedelta(days=days - 1)
