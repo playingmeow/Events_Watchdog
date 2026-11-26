@@ -163,7 +163,14 @@ def parse_email(message):
         parser.feed(source)
         text += "\n" + " ".join(parser.parts)
     text = html.unescape(text)
-    canceled = bool(re.search(r"\b(cancel(?:led|ed|lation)?|cancellation confirmed)\b", subject + "\n" + text, re.I))
+    canceled = bool(
+        re.search(r"\b(cancellation|cancelled|canceled)\b", subject, re.I)
+        or re.search(
+            r"\b(?:confirmation of cancellation|booking (?:has been|was) cancel(?:led|ed)|"
+            r"reservation (?:has been|was) cancel(?:led|ed))\b",
+            text, re.I,
+        )
+    )
     objects = []
     for body in markup:
         objects.extend(jsonld_objects(body))
@@ -226,7 +233,9 @@ def latest_email_state(headers):
         if not record:
             continue
         previous = latest.get(record["booking_id"])
-        if previous is None or record["received"] > previous["received"]:
+        if (previous is None or record["received"] > previous["received"]
+                or (record["received"] == previous["received"]
+                    and record["cancelled"] and not previous["cancelled"])):
             latest[record["booking_id"]] = record
     if not latest:
         raise RuntimeError("Gmail search returned no parseable SimplyBook booking messages")
