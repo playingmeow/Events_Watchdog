@@ -26,3 +26,27 @@ Edit `watchlist.json` to add watches and sources. Current sources are Google New
 - News RSS discovery is a pilot; official Heartbeat@Bedok listings need a dedicated source.
 - Event expiry filtering and Attend / Not Interested → Calendar callbacks are **not yet implemented**.
 - No automated booking.
+
+## MakeIT booking snapshot writer
+
+`makeit-sync.yml` runs at **08:15 Singapore time** each day. It reads SimplyBook messages using Gmail search `in:anywhere -in:spam` (so Trash is included), reconciles future bookings against the primary Google Calendar, and commits only the minimal public booking snapshot. If Gmail and Calendar disagree, it fails without replacing the snapshot. The morning reminder skips the MakeIT section when the last successful snapshot is over 20 hours old; other maintenance reminders continue normally.
+
+### Google credentials
+
+The scheduled writer needs these repository Actions secrets:
+
+- `GOOGLE_OAUTH_CLIENT_ID`
+- `GOOGLE_OAUTH_CLIENT_SECRET`
+- `GOOGLE_OAUTH_REFRESH_TOKEN`
+
+Create a Google Cloud project, enable Gmail API and Google Calendar API, then configure an OAuth consent screen and OAuth client. Generate an offline refresh token for these read-only scopes:
+
+- `https://www.googleapis.com/auth/gmail.readonly`
+- `https://www.googleapis.com/auth/calendar.events.readonly`
+
+You can generate it in Google's OAuth 2.0 Playground by selecting **Use your own OAuth credentials**, setting the Playground URL as the OAuth client's redirect URI, enabling offline access and consent, then authorizing those scopes. Add the three values directly in **GitHub → Settings → Secrets and variables → Actions**. Never commit or paste the refresh token into an issue, PR, or chat.
+
+**Google OAuth caveat:** Gmail's `gmail.readonly` scope is classified as restricted. For a one-person personal-use app, Google's verification guidance describes a personal-use exception, but consent may show an unverified-app warning. An external OAuth app left in **Testing** issues refresh tokens that expire after 7 days, so that mode is suitable only for a short trial. Confirm Google's current verification and data-handling requirements before publishing the app for ongoing use.
+
+Use **Actions → MakeIT booking sync → Run workflow** with `dry_run=true` to check the reconciliation before the first write. The daily schedule runs a live sync automatically once credentials are configured.
+\n
