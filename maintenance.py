@@ -4,7 +4,7 @@ import os
 from datetime import date, timedelta
 from urllib.parse import quote
 from watchdog import ROOT, SGT, datetime, send_ntfy
-from makeit_bookings import upcoming_bookings, format_bookings
+from makeit_bookings import upcoming_bookings, format_bookings, StaleSnapshotError
 
 def monthly_cycle_start(task, today):
     day = task["day_of_month"]
@@ -125,7 +125,11 @@ def run_maintenance(dry_run=False, evening=False):
         else:
             notified[task["id"]] = task.get("last_done") or "initial"
     if not evening:
-        bookings = upcoming_bookings(today)
+        try:
+            bookings = upcoming_bookings(today)
+        except StaleSnapshotError as exc:
+            print(f"[MAKEIT SKIPPED] {exc}")
+            bookings = None
         if bookings:
             if dry_run:
                 print("[DRY RUN MAKEIT]", format_bookings(bookings))
